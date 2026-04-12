@@ -542,10 +542,18 @@ body {
   font-size: 1.125rem;
 }
 
-/* Merch packs page (/merch-packs) */
+/* Merch packs page (/merch-packs): full-viewport art, no copy overlay */
+.main__content--merch {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 .merch-packs-page {
   position: relative;
-  min-height: min(88vh, 900px);
+  flex: 1 1 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   padding: 0;
 }
@@ -553,25 +561,14 @@ body {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center 40%;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 .merch-packs-page__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(12, 16, 14, 0.82) 0%,
-    rgba(12, 16, 14, 0.45) 45%,
-    rgba(12, 16, 14, 0.75) 100%
-  );
-  pointer-events: none;
+  display: none;
 }
 .merch-packs-page__inner {
-  position: relative;
-  z-index: 1;
-  padding: 2rem 1rem 3rem;
-  max-width: 40rem;
+  display: none;
 }
 .merch-packs-page__title {
   margin: 0 0 0.5rem;
@@ -586,6 +583,13 @@ body {
   font-size: 1.125rem;
   line-height: 1.55;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+}
+
+body.route-merch-packs .site-header {
+  justify-content: flex-end;
+}
+body.route-merch-packs .site-header__title {
+  display: none;
 }
 
 .section--intro .intro__body {

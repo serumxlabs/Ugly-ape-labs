@@ -250,6 +250,7 @@
     if (mainHome) mainHome.hidden = route !== 'home';
     if (mainRaffles) mainRaffles.hidden = route !== 'raffles';
     if (mainMerch) mainMerch.hidden = route !== 'merch-packs';
+    document.body.classList.toggle('route-merch-packs', route === 'merch-packs');
     setRouteActive(route);
     var heroTitleInner = document.getElementById('hero-title-inner');
     if (heroTitleInner) {
