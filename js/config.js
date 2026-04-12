@@ -75,7 +75,7 @@ window.ABSURD_APES_CONFIG = {
     {
       name: 'Absurd Reserve',
       image: 'assets/absurd-reserve.png',
-      description: 'Locked liquidity for peace of mind to holders 🔒\nCompounding for constant growth for the vault ✅\nMonthly Solana airdrops that increase monthly 🪂',
+      description: 'Locked liquidity for peace of mind to holders 🔒\nCompounding for constant growth for the vault ✅',
     },
     {
       name: 'Absurd Portals',
