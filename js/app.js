@@ -30,17 +30,23 @@
     if (heroTitleInner) heroTitleInner.textContent = hero.title || projectName;
     var heroTagline = document.getElementById('hero-tagline');
     if (heroTagline) heroTagline.textContent = hero.tagline || '';
-    var heroSub = document.getElementById('hero-subtitle');
-    if (heroSub && hero.subtitle) {
-      if (/\s+Solana\.?\s*$/i.test(hero.subtitle)) {
-        var solanaUrl = hero.solanaLogoUrl || '/assets/solana-logo.svg';
-        var beforeSolana = hero.subtitle.replace(/\s+Solana\.?\s*$/i, '');
-        heroSub.innerHTML = beforeSolana + ' <img src="' + solanaUrl + '" alt="" class="hero-home__solana-icon" width="20" height="20"> Solana.';
-      } else if (hero.subtitle.indexOf('<') !== -1) {
-        heroSub.innerHTML = hero.subtitle;
-      } else {
-        heroSub.textContent = hero.subtitle;
-      }
+
+    var introCfg = c.intro || {};
+    var introTitleEl = document.getElementById('intro-title');
+    if (introTitleEl && introCfg.title) introTitleEl.textContent = introCfg.title;
+    var introBodyEl = document.getElementById('intro-body');
+    if (introBodyEl && introCfg.body) introBodyEl.innerHTML = introCfg.body;
+
+    var merch = c.merchPacks || {};
+    var merchTitleEl = document.getElementById('merch-packs-title');
+    if (merchTitleEl && merch.title) merchTitleEl.textContent = merch.title;
+    var merchLeadEl = document.getElementById('merch-packs-lead');
+    if (merchLeadEl) merchLeadEl.textContent = merch.lead || '';
+    var merchBg = document.getElementById('merch-packs-bg');
+    if (merchBg && merch.backgroundImage) {
+      var bgPath = merch.backgroundImage.replace(/^\.\//, '');
+      var bgUrl = bgPath.indexOf('/') === 0 ? bgPath : '/' + bgPath;
+      merchBg.style.backgroundImage = 'url("' + bgUrl + '")';
     }
 
     // Dashboard brand
@@ -219,29 +225,38 @@
   // ----- Client-side route: home vs raffles (no full reload, dashboard stays) -----
   function getRoute() {
     var path = window.location.pathname.replace(/\/$/, '') || '/';
-    return path === '/raffles' ? 'raffles' : 'home';
+    if (path === '/raffles') return 'raffles';
+    if (path === '/merch-packs') return 'merch-packs';
+    return 'home';
   }
   var mainHome = document.getElementById('main-home');
   var mainRaffles = document.getElementById('main-raffles');
-  var routeLinks = document.querySelectorAll('[data-route="home"], [data-route="raffles"]');
+  var mainMerch = document.getElementById('main-merch');
+  var routeLinks = document.querySelectorAll('[data-route="home"], [data-route="raffles"], [data-route="merch-packs"]');
 
   function setRouteActive(route) {
     routeLinks.forEach(function (link) {
-      /* On home route, setActiveSection controls which item is active; only Raffles gets route-active */
-      var isActive = link.getAttribute('data-route') === route && route !== 'home';
+      /* On home route, setActiveSection controls which item is active; SPA routes get route-active */
+      var linkRoute = link.getAttribute('data-route');
+      var isActive = linkRoute === route && route !== 'home';
       link.classList.toggle('dashboard__link--active', isActive);
       link.classList.toggle('dashboard-bottom__item--active', isActive);
-      link.setAttribute('aria-current', isActive && route === 'raffles' ? 'page' : 'false');
+      var pageRoute = route === 'raffles' || route === 'merch-packs';
+      link.setAttribute('aria-current', isActive && pageRoute && linkRoute === route ? 'page' : 'false');
     });
   }
 
   function showView(route) {
     if (mainHome) mainHome.hidden = route !== 'home';
     if (mainRaffles) mainRaffles.hidden = route !== 'raffles';
+    if (mainMerch) mainMerch.hidden = route !== 'merch-packs';
     setRouteActive(route);
     var heroTitleInner = document.getElementById('hero-title-inner');
     if (heroTitleInner) {
-      heroTitleInner.textContent = route === 'raffles' ? 'ABSURD RAFFLES' : (CONFIG.hero && CONFIG.hero.title ? CONFIG.hero.title : CONFIG.projectName || 'Project');
+      var merchCfg = CONFIG.merchPacks || {};
+      if (route === 'raffles') heroTitleInner.textContent = 'ABSURD RAFFLES';
+      else if (route === 'merch-packs') heroTitleInner.textContent = merchCfg.headerTitle || 'ABSURD MERCH';
+      else heroTitleInner.textContent = CONFIG.hero && CONFIG.hero.title ? CONFIG.hero.title : CONFIG.projectName || 'Project';
     }
     if (route === 'raffles' && typeof window.initRafflesPage === 'function') window.initRafflesPage();
     if (route === 'home') setActiveSection(getSectionIdFromHash());
@@ -259,7 +274,7 @@
       /* Home is href="#home" and handled by section nav (scroll + hash); only handle full-page routes here */
       if (href.indexOf('#') === 0) return;
       var path = href.split('?')[0].split('#')[0].replace(/\/$/, '') || '/';
-      if (path === '/raffles' || path === '/') {
+      if (path === '/raffles' || path === '/merch-packs') {
         e.preventDefault();
         history.pushState(null, '', href);
         showView(getRoute());
@@ -307,7 +322,7 @@
       const sectionId = link.getAttribute('data-section');
       if (sectionId && link.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
-        if (getRoute() === 'raffles') {
+        if (getRoute() === 'raffles' || getRoute() === 'merch-packs') {
           history.pushState(null, '', '/#' + sectionId);
           showView('home');
         }

@@ -198,8 +198,11 @@ app.get('/api/proxy-image', async function (req, res) {
   }
 });
 
-// Raffles: SPA route — serve index so client can show raffles view without reload
+// Raffles / Merch packs: SPA routes — same shell + dashboard
 app.get('/raffles', function (req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+app.get('/merch-packs', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 

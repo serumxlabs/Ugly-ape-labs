@@ -8,7 +8,9 @@
     { "source": "/api/raffles", "destination": "/api/raffles-proxy" },
     { "source": "/api/raffles/(.*)", "destination": "/api/raffles-proxy?path=$1" },
     { "source": "/raffles", "destination": "/" },
-    { "source": "/raffles/", "destination": "/" }
+    { "source": "/raffles/", "destination": "/" },
+    { "source": "/merch-packs", "destination": "/" },
+    { "source": "/merch-packs/", "destination": "/" }
   ],
   "redirects": [
     { "source": "/absurd-apes", "destination": "/", "permanent": false },
