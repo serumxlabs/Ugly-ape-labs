@@ -64,6 +64,8 @@
       return;
     }
 
+    if (adminBtn) adminBtn.hidden = true;
+
     fetchWithCreds(waitListApiUrl('me'), { cache: 'no-store' })
       .then(function (r) { return r.json(); })
       .then(function (data) {
@@ -96,11 +98,13 @@
       });
 
     fetchWithCreds(rafflesAdminCheckUrl(), { cache: 'no-store' })
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error('admin-check failed');
+        return r.json();
+      })
       .then(function (data) {
-        if (adminBtn) {
-          adminBtn.hidden = !(data && data.admin);
-        }
+        if (!adminBtn) return;
+        adminBtn.hidden = !(data && data.admin === true);
       })
       .catch(function () {
         if (adminBtn) adminBtn.hidden = true;
