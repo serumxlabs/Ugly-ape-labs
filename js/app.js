@@ -44,9 +44,21 @@
     if (merchLeadEl) merchLeadEl.textContent = merch.lead || '';
     var merchBg = document.getElementById('merch-packs-bg');
     if (merchBg && merch.backgroundImage) {
-      var bgPath = merch.backgroundImage.replace(/^\.\//, '');
-      var bgUrl = bgPath.indexOf('/') === 0 ? bgPath : '/' + bgPath;
-      merchBg.style.backgroundImage = 'url("' + bgUrl + '")';
+      function merchBgResolvedUrl(path) {
+        if (!path) return '';
+        var p = path.replace(/^\.\//, '');
+        return p.indexOf('/') === 0 ? p : '/' + p;
+      }
+      function applyMerchBackground() {
+        var desktop = merch.backgroundImage;
+        var mobile = merch.backgroundImageMobile || desktop;
+        var path = window.matchMedia('(max-width: 899px)').matches ? mobile : desktop;
+        merchBg.style.backgroundImage = 'url("' + merchBgResolvedUrl(path) + '")';
+      }
+      applyMerchBackground();
+      var mqMerchBg = window.matchMedia('(max-width: 899px)');
+      if (mqMerchBg.addEventListener) mqMerchBg.addEventListener('change', applyMerchBackground);
+      else if (mqMerchBg.addListener) mqMerchBg.addListener(applyMerchBackground);
     }
 
     // Dashboard brand

@@ -53,6 +53,7 @@ window.ABSURD_APES_CONFIG = {
     title: 'Merch packs',
     lead: 'ABSURD merch dropping soon. Details and drops will be announced here and in Discord.',
     backgroundImage: 'assets/merch-packs-bg.png',
+    backgroundImageMobile: 'assets/merch-packs-bg-mobile.png',
   },
 
   // ——— Footer ———
