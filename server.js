@@ -409,6 +409,7 @@ app.get('/api/wait-list/all', async function (req, res) {
     res.json({
       entries: (entries || []).map((r) => ({
         discordId: r.discord_id,
+        discordUsername: r.discord_username || null,
         email: r.email,
         createdAt: r.created_at,
       })),

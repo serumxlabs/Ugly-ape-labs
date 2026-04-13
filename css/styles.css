@@ -694,8 +694,30 @@ body {
   color: var(--text);
 }
 .merch-waitlist-admin-row__meta {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+.merch-waitlist-copy-btn {
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  min-width: 2.35rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+.merch-waitlist-copy-btn__svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: block;
+}
+.merch-waitlist-copy-btn--ok {
+  color: var(--success, #14f195);
+  border-color: rgba(20, 241, 149, 0.45);
 }
 
 body.route-merch-packs .site-header {

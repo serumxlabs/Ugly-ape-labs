@@ -185,8 +185,14 @@
         }
         adminEmpty.hidden = true;
         adminListEl.hidden = false;
+        var copyIconSvg =
+          '<svg class="merch-waitlist-copy-btn__svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        var checkIconSvg =
+          '<svg class="merch-waitlist-copy-btn__svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
         entries.forEach(function (row) {
           var email = String(row.email || '');
+          var username = (row.discordUsername && String(row.discordUsername).trim()) || '';
           var div = document.createElement('div');
           div.className = 'merch-waitlist-admin-row';
           var main = document.createElement('div');
@@ -196,19 +202,26 @@
           emailSpan.textContent = email;
           var meta = document.createElement('span');
           meta.className = 'merch-waitlist-admin-row__meta';
-          meta.textContent = (row.discordId || '').slice(0, 10) + '…';
+          meta.textContent = username || '—';
           main.appendChild(emailSpan);
           main.appendChild(meta);
           var copyBtn = document.createElement('button');
           copyBtn.type = 'button';
-          copyBtn.className = 'btn btn--outline btn--sm';
-          copyBtn.textContent = 'Copy email';
+          copyBtn.className = 'btn btn--outline merch-waitlist-copy-btn';
+          copyBtn.setAttribute('aria-label', 'Copy email');
+          copyBtn.title = 'Copy email';
+          copyBtn.innerHTML = copyIconSvg;
           copyBtn.addEventListener('click', function () {
             if (!email || !navigator.clipboard || !navigator.clipboard.writeText) return;
             navigator.clipboard.writeText(email).then(function () {
-              var t = copyBtn.textContent;
-              copyBtn.textContent = 'Copied';
-              setTimeout(function () { copyBtn.textContent = t; }, 1500);
+              copyBtn.innerHTML = checkIconSvg;
+              copyBtn.setAttribute('aria-label', 'Copied');
+              copyBtn.classList.add('merch-waitlist-copy-btn--ok');
+              setTimeout(function () {
+                copyBtn.innerHTML = copyIconSvg;
+                copyBtn.setAttribute('aria-label', 'Copy email');
+                copyBtn.classList.remove('merch-waitlist-copy-btn--ok');
+              }, 1500);
             });
           });
           div.appendChild(main);

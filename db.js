@@ -394,7 +394,10 @@ async function getAllWaitList() {
   if (!ready) return [];
   const p = getPool();
   const res = await p.query(
-    'SELECT discord_id, email, created_at, updated_at FROM wait_list ORDER BY created_at ASC'
+    `SELECT w.discord_id, w.email, w.created_at, w.updated_at, u.discord_username
+     FROM wait_list w
+     LEFT JOIN users u ON u.discord_id = w.discord_id
+     ORDER BY w.created_at ASC`
   );
   return res.rows || [];
 }
