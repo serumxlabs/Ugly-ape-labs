@@ -20,7 +20,7 @@ Open `http://localhost:3000`.
 ## Discord login
 
 1. [Discord Developer Portal](https://discord.com/developers/applications) → create or use an application.
-2. **OAuth2 → Redirects**: add `http://localhost:3000/api/discord/callback` (local) and `https://yourdomain.com/api/discord/callback` (production).
+2. **OAuth2 → Redirects**: add `http://localhost:3000/api/discord/callback` (local) and **every production host** you use, e.g. `https://www.yourdomain.com/api/discord/callback` **and** `https://your-app.vercel.app/api/discord/callback`. The server sets `redirect_uri` from the incoming request so users return on the same domain they started on (custom domain vs Vercel URL).
 3. Copy **Application ID** → `DISCORD_CLIENT_ID`, and **Client Secret** → `DISCORD_CLIENT_SECRET` in `.env`.
 4. For **Team** section avatars: same app → **Bot** → create/reset token → `DISCORD_BOT_TOKEN` in `.env`.
 5. For **raffle announcements** (bot posts new raffles and winners to a channel): see [docs/DISCORD-BOT-INVITE.md](docs/DISCORD-BOT-INVITE.md). Invite the bot with `https://discord.com/api/oauth2/authorize?client_id=YOUR_APPLICATION_ID&permissions=2048&scope=bot`, then set `DISCORD_RAFFLE_CHANNEL_ID` to the channel ID.
@@ -44,7 +44,7 @@ After this, Discord logins are stored in `users`, and when a user **Verify**s (D
    - **Required for Discord + raffles**: `SESSION_SECRET`, `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DATABASE_URL`
    - **Optional**: `BASE_URL` or `SITE_URL` (e.g. `https://your-app.vercel.app` for OG meta), `HELIUS_API_KEY`, `AAA_TOKEN_MINT`, `DISCORD_BOT_TOKEN`, `BIRDEYE_API_KEY`, collection mints
    - **Raffles**: `ADMIN_DISCORD_IDS` (comma-separated Discord user IDs for raffle admins), `PRIZE_WALLET` (Solana address for prize NFTs), `RAFFLE_TREASURY_WALLET` (where ticket payments go; defaults to `PRIZE_WALLET` if unset)
-4. **Discord redirect**: In [Discord Developer Portal](https://discord.com/developers/applications) → your app → OAuth2 → Redirects, add `https://<your-vercel-domain>/api/discord/callback`.
+4. **Discord redirect**: Same as local setup — whitelist **each** callback URL (custom domain and Vercel default domain if both are used). Missing entries cause OAuth errors for that host.
 5. **Database**: Run `npm run db:migrate` once against your production `DATABASE_URL` (from your machine: `DATABASE_URL=postgresql://... npm run db:migrate`) so raffles and payment-signatures tables exist.
 6. **Deploy**: push to your main branch or trigger a deploy from the Vercel dashboard.
 

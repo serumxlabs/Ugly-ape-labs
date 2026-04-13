@@ -2,7 +2,7 @@
  * Absurd Apes — Express server with Discord OAuth2 login
  * Serves static site and provides /api/discord/* routes.
  *
- * Required env: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, SESSION_SECRET, BASE_URL
+ * Required env: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, SESSION_SECRET, BASE_URL (fallback)
  */
 
 require('dotenv').config();
@@ -30,7 +30,21 @@ if (process.env.NODE_ENV === 'production' && SESSION_SECRET === DEFAULT_SESSION_
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 const BASE_URL = (process.env.BASE_URL || 'http://localhost:' + PORT).replace(/\/$/, '');
-const REDIRECT_URI = BASE_URL + '/api/discord/callback';
+
+/** Public origin for Discord OAuth — must match the site the user opened (custom domain vs *.vercel.app). */
+function getOAuthBaseUrl(req) {
+  if (process.env.NODE_ENV !== 'production') {
+    return BASE_URL;
+  }
+  const proto = (req.get('x-forwarded-proto') || req.protocol || 'https').split(',')[0].trim();
+  const host = (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim();
+  if (host) return (proto + '://' + host).replace(/\/$/, '');
+  return BASE_URL;
+}
+
+function discordRedirectUri(req) {
+  return getOAuthBaseUrl(req) + '/api/discord/callback';
+}
 
 const DISCORD_AUTH_URL = 'https://discord.com/api/oauth2/authorize';
 const DISCORD_TOKEN_URL = 'https://discord.com/api/oauth2/token';
@@ -235,7 +249,7 @@ app.get('/api/discord/auth', function (req, res) {
   req.session.discordState = state;
   const qs = new URLSearchParams({
     client_id: DISCORD_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: discordRedirectUri(req),
     response_type: 'code',
     scope: SCOPES,
     state: state,
@@ -266,7 +280,7 @@ app.get('/api/discord/callback', async function (req, res) {
         client_secret: DISCORD_CLIENT_SECRET,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: discordRedirectUri(req),
       }).toString(),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1811,7 +1825,7 @@ if (process.env.VERCEL !== '1') {
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       console.log('Discord login disabled: set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in .env');
     } else {
-      console.log('Discord redirect URI for Dev Portal:', REDIRECT_URI);
+      console.log('Discord OAuth: add each production redirect to Dev Portal, e.g.', BASE_URL + '/api/discord/callback', '(local), plus https://YOUR-DOMAIN/api/discord/callback');
     }
   });
 }
