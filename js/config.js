@@ -36,7 +36,7 @@ window.ABSURD_APES_CONFIG = {
   // ——— Hero ———
   hero: {
     title: 'ABSURD APES',
-    tagline: "The Most Absurd Art you'll see in Web3",
+    tagline: '',
     solanaLogoUrl: '/assets/solana-logo.svg',
     backgroundImage: 'assets/hero-bg.png',
   },
@@ -44,7 +44,7 @@ window.ABSURD_APES_CONFIG = {
   // ——— Intro (main story; linked below Home) ———
   intro: {
     title: 'Intro',
-    body: "<p>The Absurd brand was introduced over 2 years ago in March 2024 with our very first NFT Collection \"Absurd Art Apes\".</p><p>We started as an art project, raising awareness for artists and now we have multiple utilities including NFT staking earning $AAA token and Trait store for ultimate customisation both provided by GOTM Labs, we also have Raffles and much more.</p><p>We are just getting started with huge plans for brand expansion including our second NFT collection \"Absurd Horizons\" MINTING NOW, Absurd Reserve airdropping $SOL on a monthly basis, token launch, Absurd Merch and the major step of bridging into Web2.</p><p>We Absurd, Expect Us.</p>",
+    body: "<p>The Most Absurd Art you'll see in Web3</p><p>The Absurd brand was introduced over 2 years ago in March 2024 with our very first NFT Collection \"Absurd Art Apes\".</p><p>We started as an art project, raising awareness for artists and now we have multiple utilities including NFT staking earning $AAA token and Trait store for ultimate customisation both provided by GOTM Labs, we also have Raffles and much more.</p><p>We are just getting started with huge plans for brand expansion including our second NFT collection \"Absurd Horizons\" MINTING NOW, Absurd Reserve, token launch, Absurd Merch and the major step of bridging into Web2.</p><p>We Absurd, Expect Us.</p>",
   },
 
   // ——— Merch packs page (/merch-packs) ———
