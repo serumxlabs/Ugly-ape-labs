@@ -77,10 +77,12 @@
         }
 
         if (joined) {
+          joinBtn.classList.add('merch-packs-page__waitlist-btn--joined');
           joinBtn.disabled = true;
-          joinBtn.textContent = 'Joined wait list';
+          joinBtn.textContent = '\u2713 Joined';
           joinBtn.removeAttribute('title');
         } else {
+          joinBtn.classList.remove('merch-packs-page__waitlist-btn--joined');
           joinBtn.textContent = 'Join wait list';
           joinBtn.disabled = !discordOk;
           if (!discordOk) {
@@ -92,6 +94,7 @@
       })
       .catch(function () {
         if (hintEl) hintEl.hidden = false;
+        joinBtn.classList.remove('merch-packs-page__waitlist-btn--joined');
         joinBtn.disabled = true;
         joinBtn.textContent = 'Join wait list';
         joinBtn.setAttribute('title', 'Could not load wait list status');
@@ -255,7 +258,7 @@
     if (joinBtn) {
       joinBtn.addEventListener('click', function () {
         if (joinBtn.disabled) return;
-        if (joinBtn.textContent === 'Joined wait list') return;
+        if (joinBtn.classList.contains('merch-packs-page__waitlist-btn--joined')) return;
         setJoinModal(true);
       });
     }

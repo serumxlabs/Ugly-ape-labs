@@ -607,10 +607,6 @@ body {
 .merch-packs-page__admin-btn[hidden] {
   display: none !important;
 }
-.merch-packs-page__waitlist-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
 .merch-packs-page__waitlist-hint {
   margin: 0;
   font-size: 0.875rem;
@@ -1112,6 +1108,7 @@ body.route-home .site-header__title {
   height: auto;
   object-fit: contain;
   object-position: left center;
+  background: transparent;
 }
 
 .dashboard__nav {
@@ -1858,6 +1855,34 @@ body.holdings-verified #btn-verify-panel {
 .btn--outline:hover:not(:disabled) {
   background: var(--accent-dim);
   border-color: var(--accent);
+}
+
+/* Merch wait list — pill (declared after .btn so these beat global .btn / .btn:disabled) */
+.merch-packs-page__waitlist-btn.btn {
+  border-radius: 9999px;
+  padding: 0.65rem 1.75rem;
+  font-weight: 600;
+  background: #fff;
+  color: #0a0a0a;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+.merch-packs-page__waitlist-btn.btn:hover:not(:disabled):not(.merch-packs-page__waitlist-btn--joined) {
+  background: #f0f0f0;
+  color: #0a0a0a;
+}
+.merch-packs-page__waitlist-btn.btn:disabled:not(.merch-packs-page__waitlist-btn--joined) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.merch-packs-page__waitlist-btn.btn.merch-packs-page__waitlist-btn--joined,
+.merch-packs-page__waitlist-btn.btn.merch-packs-page__waitlist-btn--joined:disabled {
+  opacity: 1;
+  cursor: default;
+  background: #9ca3af;
+  color: #0a0a0a;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* After .btn--outline so copy icon button keeps a surface (outline alone is transparent + can hide SVG fill) */
