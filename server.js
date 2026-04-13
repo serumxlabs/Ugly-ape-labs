@@ -16,6 +16,8 @@ const axios = require('axios');
 const bs58 = require('bs58');
 
 const app = express();
+/* Required on Vercel / reverse proxies so secure cookies and req.protocol are correct */
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 const DEFAULT_SESSION_SECRET = 'absurd-apes-session-secret-change-in-production';
@@ -309,7 +311,10 @@ app.get('/api/discord/callback', async function (req, res) {
 
 // ——— Current Discord user ———
 app.get('/api/discord/me', function (req, res) {
-  res.setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate');
+  res.setHeader('Cache-Control', 'private, no-store, no-cache, must-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Vary', 'Cookie');
   if (!req.session || !req.session.discord) {
     return res.json({ connected: false });
   }

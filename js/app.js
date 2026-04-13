@@ -990,7 +990,11 @@
   }
 
   function fetchDiscordMe() {
-    return fetch(window.location.origin + '/api/discord/me', { credentials: 'include' })
+    return fetch(window.location.origin + '/api/discord/me', {
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
+    })
       .then(function (res) {
         if (!res.ok) return null;
         return res.json();
@@ -1063,15 +1067,17 @@
         window.history.replaceState(null, '', cleanUrl);
       }
     }
-    fetchDiscordMe().then(function (user) {
-      if (discordParam === 'connected' && !user) {
-        setTimeout(function () {
-          fetchDiscordMe().then(done);
-        }, 600);
-        return;
-      }
-      done();
-    }).catch(done);
+    function retryConnected(attempt) {
+      fetchDiscordMe().then(function (user) {
+        if (discordParam === 'connected' && !user && attempt < 3) {
+          var waits = [400, 1200, 2500];
+          setTimeout(function () { retryConnected(attempt + 1); }, waits[attempt]);
+          return;
+        }
+        done();
+      }).catch(done);
+    }
+    retryConnected(0);
   })();
 
   // ----- Mobile panel -----
