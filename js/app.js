@@ -260,6 +260,11 @@
       else heroTitleInner.textContent = CONFIG.hero && CONFIG.hero.title ? CONFIG.hero.title : CONFIG.projectName || 'Project';
     }
     if (route === 'raffles' && typeof window.initRafflesPage === 'function') window.initRafflesPage();
+    if (route === 'merch-packs') {
+      setTimeout(function () {
+        if (typeof window.initMerchWaitlistPage === 'function') window.initMerchWaitlistPage();
+      }, 0);
+    }
     if (route === 'home') setActiveSection(getSectionIdFromHash());
     else {
       navLinks.forEach(function (link) {
@@ -981,6 +986,7 @@
       if (w && typeof linkWalletToDiscord === 'function') setTimeout(function () { linkWalletToDiscord(w); }, 400);
     }
     if (connected && window.checkAlreadyVerified) window.checkAlreadyVerified();
+    if (typeof window.refreshMerchWaitlistUI === 'function') window.refreshMerchWaitlistUI();
   }
 
   function fetchDiscordMe() {

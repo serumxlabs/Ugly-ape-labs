@@ -339,6 +339,66 @@ async function drawRaffleWinner(raffleId) {
   }
 }
 
+// ——— Merch wait list (Discord + email) ———
+async function ensureWaitListTable() {
+  const p = getPool();
+  if (!p) return false;
+  await p.query(`
+    CREATE TABLE IF NOT EXISTS wait_list (
+      discord_id VARCHAR(32) PRIMARY KEY,
+      email VARCHAR(320) NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  return true;
+}
+
+function normalizeWaitListEmail(email) {
+  const em = String(email || '').trim().toLowerCase();
+  if (!em || em.length > 320) return null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return null;
+  return em;
+}
+
+async function addWaitListEntry(discordId, email) {
+  const em = normalizeWaitListEmail(email);
+  if (!em) return { ok: false, error: 'Invalid email' };
+  const ready = await ensureWaitListTable();
+  if (!ready) return { ok: false, error: 'Database unavailable' };
+  const p = getPool();
+  await p.query(
+    `INSERT INTO wait_list (discord_id, email, created_at, updated_at)
+     VALUES ($1, $2, NOW(), NOW())
+     ON CONFLICT (discord_id) DO UPDATE SET
+       email = EXCLUDED.email,
+       updated_at = NOW()`,
+    [String(discordId), em]
+  );
+  return { ok: true };
+}
+
+async function getWaitListByDiscordId(discordId) {
+  const ready = await ensureWaitListTable();
+  if (!ready) return null;
+  const p = getPool();
+  const res = await p.query(
+    'SELECT discord_id, email, created_at, updated_at FROM wait_list WHERE discord_id = $1',
+    [String(discordId)]
+  );
+  return res.rows?.[0] || null;
+}
+
+async function getAllWaitList() {
+  const ready = await ensureWaitListTable();
+  if (!ready) return [];
+  const p = getPool();
+  const res = await p.query(
+    'SELECT discord_id, email, created_at, updated_at FROM wait_list ORDER BY created_at ASC'
+  );
+  return res.rows || [];
+}
+
 module.exports = {
   getPool,
   upsertUser,
@@ -357,4 +417,8 @@ module.exports = {
   drawRaffleWinner,
   useRafflePaymentSignature,
   setRaffleClaimed,
+  ensureWaitListTable,
+  addWaitListEntry,
+  getWaitListByDiscordId,
+  getAllWaitList,
 };

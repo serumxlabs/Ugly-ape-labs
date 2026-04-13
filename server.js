@@ -365,6 +365,55 @@ app.get('/api/raffles/admin-check', function (req, res) {
   res.json({ admin, prizeWallet: prizeWallet || undefined });
 });
 
+// ——— Merch wait list ———
+app.get('/api/wait-list/me', async function (req, res) {
+  try {
+    if (!req.session?.discord) {
+      return res.json({ discordConnected: false, joined: false });
+    }
+    const row = await db.getWaitListByDiscordId(req.session.discord.id);
+    res.json({
+      discordConnected: true,
+      joined: !!row,
+      email: row ? row.email : undefined,
+    });
+  } catch (e) {
+    console.warn('[wait-list/me]', e.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/api/wait-list/join', express.json(), async function (req, res) {
+  try {
+    if (!req.session?.discord) return res.status(401).json({ error: 'Log in with Discord first' });
+    const email = req.body && req.body.email;
+    const result = await db.addWaitListEntry(req.session.discord.id, email);
+    if (!result.ok) return res.status(400).json({ error: result.error || 'Could not join' });
+    res.json({ ok: true });
+  } catch (e) {
+    console.warn('[wait-list/join]', e.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/api/wait-list/all', async function (req, res) {
+  try {
+    if (!req.session?.discord) return res.status(401).json({ error: 'Not logged in' });
+    if (!isRaffleAdmin(req.session.discord.id)) return res.status(403).json({ error: 'Admin only' });
+    const entries = await db.getAllWaitList();
+    res.json({
+      entries: (entries || []).map((r) => ({
+        discordId: r.discord_id,
+        email: r.email,
+        createdAt: r.created_at,
+      })),
+    });
+  } catch (e) {
+    console.warn('[wait-list/all]', e.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // ——— Raffles: simulate transaction (returns exact error logs for debugging) ———
 // Server gets a fresh blockhash, replaces it on the tx, simulates. On BlockhashNotFound retries once with a new blockhash.
 app.post('/api/raffles/simulate', express.json(), async function (req, res) {
