@@ -759,10 +759,12 @@ body {
   stroke: var(--success, #14f195);
 }
 
-body.route-merch-packs .site-header {
+body.route-merch-packs .site-header,
+body.route-home .site-header {
   justify-content: flex-end;
 }
-body.route-merch-packs .site-header__title {
+body.route-merch-packs .site-header__title,
+body.route-home .site-header__title {
   display: none;
 }
 
@@ -1100,10 +1102,15 @@ body.route-merch-packs .site-header__title {
   object-fit: contain;
   background: transparent;
 }
-.dashboard__title {
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 1.125rem;
+.dashboard__title-img {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  max-height: 2rem;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .dashboard__nav {

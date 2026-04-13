@@ -61,9 +61,14 @@
       else if (mqMerchBg.addListener) mqMerchBg.addListener(applyMerchBackground);
     }
 
-    // Dashboard brand
-    var dashTitle = document.querySelector('.dashboard__title');
-    if (dashTitle) dashTitle.textContent = projectName;
+    // Dashboard brand (wordmark image replaces sidebar title text)
+    var dashTitleImg = document.getElementById('dashboard-title-img');
+    if (dashTitleImg && c.dashboardTitleImage) {
+      var dtiPath = c.dashboardTitleImage.replace(/^\.\//, '');
+      var dtiUrl = dtiPath.indexOf('/') === 0 ? dtiPath : '/' + dtiPath;
+      dashTitleImg.src = dtiUrl;
+      dashTitleImg.alt = projectName;
+    }
     var dashLogos = document.querySelectorAll('.dashboard__logo-img, .footer__logo');
     dashLogos.forEach(function (img) { if (img && logoUrl) img.src = logoUrl; });
     var logoAlt = document.querySelector('.dashboard__logo-img');
@@ -263,6 +268,7 @@
     if (mainRaffles) mainRaffles.hidden = route !== 'raffles';
     if (mainMerch) mainMerch.hidden = route !== 'merch-packs';
     document.body.classList.toggle('route-merch-packs', route === 'merch-packs');
+    document.body.classList.toggle('route-home', route === 'home');
     setRouteActive(route);
     var heroTitleInner = document.getElementById('hero-title-inner');
     if (heroTitleInner) {

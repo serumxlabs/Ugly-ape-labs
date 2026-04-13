@@ -12,6 +12,7 @@ window.ABSURD_APES_CONFIG = {
   ogImageUrl: 'assets/logo.png',
   tagline: 'ABSURD TOGETHER',
   logoUrl: 'assets/logo.png',
+  dashboardTitleImage: 'assets/dashboard-logo-text.png',
 
   // ——— Social ———
   social: {

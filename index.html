@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=13" />
+  <link rel="stylesheet" href="/css/styles.css?v=14" />
 </head>
 <body>
   <!-- Header: title (left) + social links (right) -->
@@ -44,7 +44,7 @@
   <aside class="dashboard dashboard--side" id="dashboard-side" aria-label="Dashboard">
     <div class="dashboard__brand">
       <span class="dashboard__logo-wrap" aria-hidden="true"><img src="assets/logo.png" alt="" class="dashboard__logo-img" width="36" height="36" /></span>
-      <span class="dashboard__title"></span>
+      <img class="dashboard__title-img" id="dashboard-title-img" src="/assets/dashboard-logo-text.png" alt="Absurd Apes" width="160" height="32" />
     </div>
     <nav class="dashboard__nav" aria-label="Main">
       <a href="#home" class="dashboard__link dashboard__link--active" data-route="home" data-section="home"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
@@ -507,7 +507,7 @@
         </div>
         <div class="merch-packs-page__cta" id="merch-packs-cta">
           <button type="button" class="btn btn--primary merch-packs-page__waitlist-btn" id="merch-waitlist-join-btn" disabled>Join wait list</button>
-          <p class="merch-packs-page__waitlist-hint" id="merch-waitlist-hint" hidden>Log in with Discord in the sidebar to join the wait list.</p>
+          <p class="merch-packs-page__waitlist-hint" id="merch-waitlist-hint" hidden>Log in with Discord in the sidebar<br />to join the wait list.</p>
           <button type="button" class="btn btn--outline merch-packs-page__admin-btn" id="merch-waitlist-admin-btn" hidden>View wait list</button>
         </div>
       </div>
