@@ -372,6 +372,23 @@ app.get('/api/wallets', async function (req, res) {
   res.json({ wallets });
 });
 
+app.post('/api/wallets/unlink', express.json(), async function (req, res) {
+  if (!req.session?.discord) return res.status(401).json({ error: 'Not logged in' });
+  let wallet = req.body && req.body.wallet;
+  if (wallet && typeof wallet !== 'string') wallet = null;
+  if (!wallet || !String(wallet).trim()) return res.status(400).json({ error: 'wallet required' });
+  const addr = String(wallet).trim();
+  if (addr.length < 32 || addr.length > 64) return res.status(400).json({ error: 'Invalid wallet address' });
+  if (!db.unlinkWallet) return res.status(503).json({ error: 'Database not configured' });
+  try {
+    const deleted = await db.unlinkWallet(req.session.discord.id, addr);
+    if (!deleted) return res.status(404).json({ error: 'Wallet not linked to your account' });
+    res.json({ ok: true });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 // ——— Raffles: admin check (only admins can create raffles) ———
 function isRaffleAdmin(discordId) {
   return discordId && ADMIN_DISCORD_IDS.includes(String(discordId));

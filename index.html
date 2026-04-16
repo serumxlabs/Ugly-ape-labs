@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=17" />
+  <link rel="stylesheet" href="/css/styles.css?v=18" />
 </head>
 <body>
   <!-- Header: title (left) + social links (right) -->
@@ -66,6 +66,7 @@
       <button type="button" class="btn btn--primary btn--full" id="btn-verify" aria-label="Verify holdings">
         Verify
       </button>
+      <div class="linked-wallets linked-wallets--dashboard" id="dashboard-linked-wallets" hidden aria-live="polite"></div>
       <button type="button" class="btn btn--outline btn--full btn-connect" id="btn-connect-wallet" aria-label="Connect wallet">
         <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
         <span class="btn__text">Connect</span>
@@ -151,6 +152,7 @@
       </nav>
       <div class="panel__actions">
         <button type="button" class="btn btn--primary btn--full" id="btn-verify-panel">Verify</button>
+        <div class="linked-wallets linked-wallets--panel" id="panel-linked-wallets" hidden aria-live="polite"></div>
         <button type="button" class="btn btn--outline btn--full btn-connect" id="btn-connect-wallet-mobile" aria-label="Connect wallet">
           <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
           <span class="btn__text">Connect</span>
@@ -208,12 +210,19 @@
             </div>
           </div>
         </div>
+        <div class="verify-modal__step verify-modal__step--linked-only" id="verify-modal-linked-step" hidden>
+          <p class="verify-modal__step-label">Linked wallets</p>
+          <div class="linked-wallets linked-wallets--verify" id="verify-modal-linked-wallets"></div>
+        </div>
         <div class="verify-modal__step">
           <p class="verify-modal__step-label">2. Connect wallet</p>
           <div class="verify-modal__wallet" id="verify-modal-wallet">
             <button type="button" class="btn btn--outline btn--full" id="verify-modal-btn-wallet" disabled>Connect wallet</button>
-            <div class="verify-modal__wallet-connected" id="verify-modal-wallet-connected" hidden>
+            <div class="verify-modal__wallet-connected verify-modal__wallet-connected--row" id="verify-modal-wallet-connected" hidden>
               <span class="verify-modal__address" id="verify-modal-wallet-address"></span>
+              <button type="button" class="linked-wallets__unlink linked-wallets__unlink--solo" id="verify-modal-btn-unlink-solo" hidden aria-label="Unlink this wallet from Discord" title="Unlink wallet">
+                <img class="linked-wallets__unlink-icon" src="/assets/link-cancel.svg" alt="" width="18" height="18" />
+              </button>
             </div>
           </div>
         </div>
@@ -223,6 +232,24 @@
           <div class="verify-modal__success" id="verify-modal-success" hidden>
             <p class="verify-modal__success-msg">Holdings verified!</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unlink wallet confirmation -->
+  <div class="verify-modal unlink-wallet-modal" id="unlink-wallet-modal" aria-hidden="true" role="dialog" aria-labelledby="unlink-wallet-modal-title" aria-modal="true">
+    <div class="verify-modal__backdrop" id="unlink-wallet-modal-backdrop"></div>
+    <div class="verify-modal__box">
+      <div class="verify-modal__head">
+        <h2 class="verify-modal__title" id="unlink-wallet-modal-title">Unlink wallet?</h2>
+        <button type="button" class="verify-modal__close" id="unlink-wallet-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="verify-modal__body">
+        <p class="unlink-wallet-modal__msg" id="unlink-wallet-modal-msg"></p>
+        <div class="unlink-wallet-modal__actions">
+          <button type="button" class="btn btn--outline btn--full" id="unlink-wallet-modal-cancel">Cancel</button>
+          <button type="button" class="btn btn--primary btn--full" id="unlink-wallet-modal-confirm">Unlink</button>
         </div>
       </div>
     </div>

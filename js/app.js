@@ -557,14 +557,17 @@
     return !!getWalletPublicKey();
   }
 
+  function updateConnectWalletButtonLabel() {
+    var pk = getWalletPublicKey();
+    var label = pk ? truncateWalletDisplay(pk) + ' \u2713' : 'Connect';
+    document.querySelectorAll('#btn-connect-wallet .btn__text, #btn-connect-wallet-mobile .btn__text').forEach(function (el) {
+      el.textContent = label;
+    });
+  }
+
   function setWalletConnected(connected) {
     document.body.classList.toggle('wallet-connected', connected);
-    var label = connected ? 'Connected' : 'Connect';
-    document.querySelectorAll('#btn-connect-wallet, #btn-connect-wallet-mobile').forEach(function (btn) {
-      if (!btn) return;
-      var textEl = btn.querySelector('.btn__text');
-      if (textEl) textEl.textContent = label; else btn.textContent = label;
-    });
+    updateConnectWalletButtonLabel();
     if (typeof syncVerifyModalState === 'function') syncVerifyModalState();
     if (connected && window.checkAlreadyVerified) window.checkAlreadyVerified();
     if (connected && document.getElementById('main-raffles') && !document.getElementById('main-raffles').hidden && typeof window.initRafflesPage === 'function') window.initRafflesPage();
@@ -759,11 +762,184 @@
     return document.body.classList.contains('discord-connected');
   }
 
+  function truncateWalletDisplay(addr) {
+    if (!addr) return '';
+    var s = String(addr).trim();
+    if (s.length <= 12) return s;
+    return s.slice(0, 4) + '…' + s.slice(-4);
+  }
+  function normalizeWalletAddr(a) {
+    return String(a || '').trim().toLowerCase();
+  }
+
   var linkedWalletThisSession = null;
+  var linkedWalletsList = [];
+  var walletPendingUnlink = null;
+
+  function fetchLinkedWalletsFromServer() {
+    if (!isDiscordConnected()) {
+      linkedWalletsList = [];
+      return Promise.resolve(linkedWalletsList);
+    }
+    return fetch(window.location.origin + '/api/wallets', { credentials: 'include', cache: 'no-store' })
+      .then(function (r) {
+        return r.ok ? r.json() : { wallets: [] };
+      })
+      .then(function (data) {
+        linkedWalletsList = (data && data.wallets) || [];
+        return linkedWalletsList;
+      })
+      .catch(function () {
+        linkedWalletsList = [];
+        return linkedWalletsList;
+      });
+  }
+
+  function buildLinkedWalletRowsHTML(wallets) {
+    return wallets.map(function (w) {
+      var disp = truncateWalletDisplay(w);
+      return (
+        '<div class="linked-wallets__row" data-wallet="' +
+        String(w).replace(/"/g, '&quot;') +
+        '"><span class="linked-wallets__addr">' +
+        String(disp).replace(/</g, '&lt;') +
+        '</span><button type="button" class="linked-wallets__unlink" data-wallet="' +
+        String(w).replace(/"/g, '&quot;') +
+        '" aria-label="Unlink wallet ' +
+        String(disp).replace(/"/g, '&quot;') +
+        '" title="Unlink wallet"><img class="linked-wallets__unlink-icon" src="/assets/link-cancel.svg" alt="" width="18" height="18" /></button></div>'
+      );
+    }).join('');
+  }
+
+  function renderLinkedWalletsUI() {
+    var dashEl = document.getElementById('dashboard-linked-wallets');
+    var panelEl = document.getElementById('panel-linked-wallets');
+    var verifyStep = document.getElementById('verify-modal-linked-step');
+    var verifyList = document.getElementById('verify-modal-linked-wallets');
+    var soloBtn = document.getElementById('verify-modal-btn-unlink-solo');
+    var pk = getWalletPublicKey();
+    var n = linkedWalletsList.length;
+    var disc = isDiscordConnected();
+
+    if (!disc || n === 0) {
+      if (dashEl) {
+        dashEl.hidden = true;
+        dashEl.innerHTML = '';
+      }
+      if (panelEl) {
+        panelEl.hidden = true;
+        panelEl.innerHTML = '';
+      }
+      if (verifyStep) verifyStep.hidden = true;
+      if (verifyList) verifyList.innerHTML = '';
+      if (soloBtn) soloBtn.hidden = true;
+      return;
+    }
+
+    if (n > 1) {
+      var html = buildLinkedWalletRowsHTML(linkedWalletsList);
+      if (dashEl) {
+        dashEl.innerHTML = html;
+        dashEl.hidden = false;
+      }
+      if (panelEl) {
+        panelEl.innerHTML = html;
+        panelEl.hidden = false;
+      }
+      if (verifyList) verifyList.innerHTML = html;
+      if (verifyStep) verifyStep.hidden = false;
+      if (soloBtn) soloBtn.hidden = true;
+    } else {
+      if (dashEl) {
+        dashEl.hidden = true;
+        dashEl.innerHTML = '';
+      }
+      if (panelEl) {
+        panelEl.hidden = true;
+        panelEl.innerHTML = '';
+      }
+      if (verifyStep) verifyStep.hidden = true;
+      if (verifyList) verifyList.innerHTML = '';
+      var one = linkedWalletsList[0];
+      var showSolo = !!(one && pk && normalizeWalletAddr(one) === normalizeWalletAddr(pk));
+      if (soloBtn) soloBtn.hidden = !showSolo;
+    }
+  }
+
+  function closeUnlinkWalletModal() {
+    var m = document.getElementById('unlink-wallet-modal');
+    if (m) m.setAttribute('aria-hidden', 'true');
+    walletPendingUnlink = null;
+  }
+
+  function openUnlinkWalletModal(walletAddress) {
+    walletPendingUnlink = walletAddress != null ? String(walletAddress).trim() : '';
+    if (!walletPendingUnlink) return;
+    var msgEl = document.getElementById('unlink-wallet-modal-msg');
+    var m = document.getElementById('unlink-wallet-modal');
+    if (msgEl) {
+      msgEl.textContent =
+        'Assets held in wallet ' +
+        truncateWalletDisplay(walletPendingUnlink) +
+        ' will no longer be associated with your Discord login. You can link this wallet again later from this site.';
+    }
+    if (m) m.setAttribute('aria-hidden', 'false');
+  }
+
+  function confirmUnlinkWallet() {
+    var w = walletPendingUnlink;
+    if (!w) return;
+    fetch(window.location.origin + '/api/wallets/unlink', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wallet: w }),
+    })
+      .then(function (r) {
+        return r
+          .json()
+          .catch(function () {
+            return {};
+          })
+          .then(function (data) {
+            return { ok: r.ok, data: data };
+          });
+      })
+      .then(function (res) {
+        closeUnlinkWalletModal();
+        if (!res.ok) {
+          var err = (res.data && res.data.error) || 'Could not unlink wallet.';
+          alert(err);
+          return;
+        }
+        var pk = getWalletPublicKey();
+        if (pk && normalizeWalletAddr(pk) === normalizeWalletAddr(w)) {
+          linkedWalletThisSession = null;
+          hasVerifiedThisSession = false;
+          hideHoldings();
+        }
+        return fetchLinkedWalletsFromServer().then(function () {
+          renderLinkedWalletsUI();
+          syncVerifyModalState();
+          updateConnectWalletButtonLabel();
+        });
+      })
+      .catch(function () {
+        closeUnlinkWalletModal();
+        alert('Network error. Try again.');
+      });
+  }
+
   function linkWalletToDiscord(walletAddress) {
     var addr = walletAddress != null ? String(walletAddress).trim() : '';
     if (!addr || !isDiscordConnected()) return Promise.resolve();
-    if (linkedWalletThisSession === addr) return Promise.resolve();
+    if (linkedWalletThisSession && normalizeWalletAddr(linkedWalletThisSession) === normalizeWalletAddr(addr)) {
+      return fetchLinkedWalletsFromServer().then(function () {
+        renderLinkedWalletsUI();
+        syncVerifyModalState();
+      });
+    }
     var base = window.location.origin + '/api/wallets/link';
     function doPost() {
       return fetch(base, {
@@ -787,7 +963,12 @@
         })
         .catch(function () {});
     }
-    return attempt(0);
+    return attempt(0).then(function () {
+      return fetchLinkedWalletsFromServer();
+    }).then(function () {
+      renderLinkedWalletsUI();
+      syncVerifyModalState();
+    });
   }
 
   function doVerify(onSuccess) {
@@ -891,6 +1072,8 @@
     var verifyBtnPanel = document.getElementById('btn-verify-panel');
     if (verifyBtnSidebar) verifyBtnSidebar.hidden = hasVerifiedThisSession;
     if (verifyBtnPanel) verifyBtnPanel.hidden = hasVerifiedThisSession;
+
+    renderLinkedWalletsUI();
   }
 
   function setVerifySuccessInModal() {
@@ -941,6 +1124,27 @@
       });
     });
   }
+
+  function onLinkedWalletsContainerClick(e) {
+    var btn = e.target.closest('.linked-wallets__unlink');
+    if (!btn || !btn.getAttribute('data-wallet')) return;
+    e.preventDefault();
+    openUnlinkWalletModal(btn.getAttribute('data-wallet'));
+  }
+  document.getElementById('dashboard-linked-wallets')?.addEventListener('click', onLinkedWalletsContainerClick);
+  document.getElementById('panel-linked-wallets')?.addEventListener('click', onLinkedWalletsContainerClick);
+  document.getElementById('verify-modal-linked-wallets')?.addEventListener('click', onLinkedWalletsContainerClick);
+
+  document.getElementById('verify-modal-btn-unlink-solo')?.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (linkedWalletsList.length !== 1) return;
+    openUnlinkWalletModal(linkedWalletsList[0]);
+  });
+
+  document.getElementById('unlink-wallet-modal-backdrop')?.addEventListener('click', closeUnlinkWalletModal);
+  document.getElementById('unlink-wallet-modal-close')?.addEventListener('click', closeUnlinkWalletModal);
+  document.getElementById('unlink-wallet-modal-cancel')?.addEventListener('click', closeUnlinkWalletModal);
+  document.getElementById('unlink-wallet-modal-confirm')?.addEventListener('click', confirmUnlinkWallet);
 
   // ----- Discord login -----
   var discordUser = null;
@@ -999,11 +1203,22 @@
       }
     }
     syncVerifyModalState();
-    if (connected && typeof getWalletPublicKey === 'function') {
-      var w = getWalletPublicKey();
-      if (w && typeof linkWalletToDiscord === 'function') setTimeout(function () { linkWalletToDiscord(w); }, 400);
+    if (connected) {
+      fetchLinkedWalletsFromServer().then(function () {
+        renderLinkedWalletsUI();
+        syncVerifyModalState();
+      });
+      if (typeof getWalletPublicKey === 'function') {
+        var w = getWalletPublicKey();
+        if (w && typeof linkWalletToDiscord === 'function') setTimeout(function () { linkWalletToDiscord(w); }, 400);
+      }
+      if (window.checkAlreadyVerified) window.checkAlreadyVerified();
+    } else {
+      linkedWalletsList = [];
+      linkedWalletThisSession = null;
+      renderLinkedWalletsUI();
+      syncVerifyModalState();
     }
-    if (connected && window.checkAlreadyVerified) window.checkAlreadyVerified();
     if (typeof window.refreshMerchWaitlistUI === 'function') window.refreshMerchWaitlistUI();
   }
 

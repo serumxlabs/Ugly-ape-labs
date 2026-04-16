@@ -58,6 +58,19 @@ async function getWalletsByDiscord(discordId) {
   return (res.rows || []).map((r) => r.wallet_address);
 }
 
+/** Remove one wallet row only if it belongs to this Discord user. Returns number of rows deleted (0 or 1). */
+async function unlinkWallet(discordId, walletAddress) {
+  const p = getPool();
+  if (!p) return 0;
+  const addr = String(walletAddress || '').trim().toLowerCase();
+  if (!addr) return 0;
+  const res = await p.query(
+    'DELETE FROM wallets WHERE wallet_address = $1 AND discord_id = $2',
+    [addr, discordId]
+  );
+  return res.rowCount || 0;
+}
+
 async function getDiscordByWallet(walletAddress) {
   const p = getPool();
   if (!p) return null;
@@ -406,6 +419,7 @@ module.exports = {
   getPool,
   upsertUser,
   linkWallet,
+  unlinkWallet,
   getWalletsByDiscord,
   getDiscordByWallet,
   getAllWalletToDiscord,

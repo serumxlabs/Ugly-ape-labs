@@ -1705,6 +1705,78 @@ body.holdings-verified #btn-verify-panel {
   font-weight: 600;
   color: var(--accent);
 }
+.verify-modal__wallet-connected--row {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.verify-modal__step--linked-only[hidden] {
+  display: none;
+}
+.linked-wallets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.linked-wallets--dashboard {
+  margin: 0.35rem 0 0.5rem;
+}
+.linked-wallets--panel {
+  margin: 0.35rem 0 0.5rem;
+}
+.linked-wallets__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.linked-wallets__addr {
+  word-break: break-all;
+  min-width: 0;
+}
+.linked-wallets__unlink {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.linked-wallets__unlink:hover {
+  color: var(--text);
+  background: var(--bg-hover);
+}
+.linked-wallets__unlink-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.unlink-wallet-modal__msg {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.unlink-wallet-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 .verify-modal .btn + .btn {
   margin-top: 0.5rem;
 }
