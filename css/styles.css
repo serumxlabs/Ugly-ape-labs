@@ -1746,24 +1746,25 @@ body.holdings-verified #btn-verify-panel {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
-  border: none;
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 .linked-wallets__unlink:hover {
   color: var(--text);
   background: var(--bg-hover);
+  border-color: var(--text-muted);
 }
 .linked-wallets__unlink-icon {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   pointer-events: none;
 }
 .unlink-wallet-modal__msg {

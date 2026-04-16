@@ -807,7 +807,7 @@
         String(w).replace(/"/g, '&quot;') +
         '" aria-label="Unlink wallet ' +
         String(disp).replace(/"/g, '&quot;') +
-        '" title="Unlink wallet"><img class="linked-wallets__unlink-icon" src="/assets/link-cancel.svg" alt="" width="18" height="18" /></button></div>'
+        '" title="Unlink wallet"><img class="linked-wallets__unlink-icon" src="/assets/link-cancel.svg?v=2" alt="" width="20" height="20" /></button></div>'
       );
     }).join('');
   }
