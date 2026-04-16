@@ -837,34 +837,27 @@
       return;
     }
 
+    /* Sidebar + panel: always list every Discord-linked wallet (1 or more) with unlink — not only when n>1 */
+    var html = buildLinkedWalletRowsHTML(linkedWalletsList);
+    if (dashEl) {
+      dashEl.innerHTML = html;
+      dashEl.hidden = false;
+    }
+    if (panelEl) {
+      panelEl.innerHTML = html;
+      panelEl.hidden = false;
+    }
+
     if (n > 1) {
-      var html = buildLinkedWalletRowsHTML(linkedWalletsList);
-      if (dashEl) {
-        dashEl.innerHTML = html;
-        dashEl.hidden = false;
-      }
-      if (panelEl) {
-        panelEl.innerHTML = html;
-        panelEl.hidden = false;
-      }
       if (verifyList) verifyList.innerHTML = html;
       if (verifyStep) verifyStep.hidden = false;
-      if (soloBtn) soloBtn.hidden = true;
     } else {
-      if (dashEl) {
-        dashEl.hidden = true;
-        dashEl.innerHTML = '';
-      }
-      if (panelEl) {
-        panelEl.hidden = true;
-        panelEl.innerHTML = '';
-      }
-      if (verifyStep) verifyStep.hidden = true;
       if (verifyList) verifyList.innerHTML = '';
-      var one = linkedWalletsList[0];
-      var showSolo = !!(one && pk && normalizeWalletAddr(one) === normalizeWalletAddr(pk));
-      if (soloBtn) soloBtn.hidden = !showSolo;
+      if (verifyStep) verifyStep.hidden = true;
     }
+
+    /* Unlink is on each row above; hide solo verify-modal button to avoid duplicate / missing when n was 1 */
+    if (soloBtn) soloBtn.hidden = true;
   }
 
   function closeUnlinkWalletModal() {
