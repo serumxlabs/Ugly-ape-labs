@@ -62,10 +62,10 @@ async function getWalletsByDiscord(discordId) {
 async function unlinkWallet(discordId, walletAddress) {
   const p = getPool();
   if (!p) return 0;
-  const addr = String(walletAddress || '').trim().toLowerCase();
+  const addr = String(walletAddress || '').trim();
   if (!addr) return 0;
   const res = await p.query(
-    'DELETE FROM wallets WHERE wallet_address = $1 AND discord_id = $2',
+    'DELETE FROM wallets WHERE LOWER(wallet_address) = LOWER($1) AND discord_id = $2',
     [addr, discordId]
   );
   return res.rowCount || 0;
