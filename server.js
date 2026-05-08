@@ -1,6 +1,6 @@
 /**
- * Absurd Apes — Express server with Discord OAuth2 login
- * Serves static site and provides /api/discord/* routes.
+ * Ugly Ape Squad — Express server with Discord OAuth2 login
+ * Serves static site and provides /api/* routes.
  *
  * Required env: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, SESSION_SECRET, BASE_URL (fallback)
  */
@@ -20,7 +20,7 @@ const app = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
-const DEFAULT_SESSION_SECRET = 'absurd-apes-session-secret-change-in-production';
+const DEFAULT_SESSION_SECRET = 'ugly-ape-squad-session-secret-change-in-production';
 const SESSION_SECRET = process.env.SESSION_SECRET || DEFAULT_SESSION_SECRET;
 if (process.env.NODE_ENV === 'production' && SESSION_SECRET === DEFAULT_SESSION_SECRET) {
   console.error('Fatal: Set a strong, unique SESSION_SECRET in production. Do not use the default.');
@@ -49,24 +49,93 @@ function discordRedirectUri(req) {
 const DISCORD_AUTH_URL = 'https://discord.com/api/oauth2/authorize';
 const DISCORD_TOKEN_URL = 'https://discord.com/api/oauth2/token';
 const DISCORD_USER_URL = 'https://discord.com/api/users/@me';
+const DISCORD_API_V10 = 'https://discord.com/api/v10';
+/** Bot token (not OAuth secret) — used to resolve user id → username/avatar for Team and similar. */
+const DISCORD_BOT_TOKEN = (process.env.DISCORD_BOT_TOKEN || '').trim();
 const SCOPES = 'identify';
 
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY;
 const HELIUS_RPC = 'https://mainnet.helius-rpc.com';
 const ME_BASE = 'https://api-mainnet.magiceden.dev/v2';
 
-// Collection slugs on Magic Eden; countKey used in API responses (absurdApesCount, col2Count)
+// Magic Eden collection slugs; countKey appears in /api/verify and /api/holders (col1Count, col2Count)
 const COLLECTIONS = [
-  { slug: 'absurd_art_apes', name: 'Absurd Art Apes', collectionMint: process.env.ABSURD_ART_APES_COLLECTION_MINT || '', countKey: 'absurdApesCount' },
-  { slug: 'absurd_horizons', name: 'Absurd Horizons', collectionMint: process.env.ABSURD_HORIZONS_COLLECTION_MINT || '', countKey: 'col2Count' },
+  {
+    slug: process.env.COLLECTION_1_ME_SLUG || 'ugly_ape_squad',
+    name: process.env.COLLECTION_1_DISPLAY_NAME || 'Ugly Ape Squad',
+    collectionMint: process.env.COLLECTION_1_MINT || '',
+    countKey: 'col1Count',
+  },
+  {
+    slug: process.env.COLLECTION_2_ME_SLUG || 'mutant_ugly_ape_squad_collection',
+    name: process.env.COLLECTION_2_DISPLAY_NAME || 'Mutant Ugly Ape Squad',
+    collectionMint: process.env.COLLECTION_2_MINT || '',
+    countKey: 'col2Count',
+  },
 ];
 
 const LAMPORTS_PER_SOL = 1e9;
-const AAA_TOKEN_MINT = process.env.AAA_TOKEN_MINT || process.env.TOKEN_MINT || '';
+const PROJECT_TOKEN_MINT = (process.env.TOKEN_MINT || '').trim();
+const TOKEN_SYMBOL = (process.env.TOKEN_SYMBOL || 'TOKEN').trim();
 const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 const TOKEN_2022_PROGRAM_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
 const ATA_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
-const TOKEN_DECIMALS = parseInt(process.env.TOKEN_DECIMALS || process.env.AAA_DECIMALS || '6', 10);
+const TOKEN_DECIMALS = parseInt(process.env.TOKEN_DECIMALS || '6', 10);
+
+/** When TOKEN_DECIMALS is unset in env, fetch mint decimals once from RPC (fixes wrong K/M/B from default 6 vs on-chain 9). */
+let cachedMintDecimals = undefined;
+
+function envTokenDecimalsExplicit() {
+  const v = process.env.TOKEN_DECIMALS;
+  if (v === undefined || v === null) return null;
+  const s = String(v).trim();
+  if (s === '') return null;
+  const n = parseInt(s, 10);
+  if (!Number.isNaN(n) && n >= 0 && n <= 18) return n;
+  return null;
+}
+
+async function resolveMintDecimals() {
+  if (cachedMintDecimals !== undefined) return cachedMintDecimals;
+  const explicit = envTokenDecimalsExplicit();
+  if (explicit !== null) {
+    cachedMintDecimals = explicit;
+    return explicit;
+  }
+  if (!HELIUS_API_KEY || !PROJECT_TOKEN_MINT) {
+    cachedMintDecimals = TOKEN_DECIMALS;
+    return cachedMintDecimals;
+  }
+  try {
+    const res = await axios.post(
+      `${HELIUS_RPC}/?api-key=${HELIUS_API_KEY}`,
+      {
+        jsonrpc: '2.0',
+        id: 'mint-decimals',
+        method: 'getAccountInfo',
+        params: [PROJECT_TOKEN_MINT, { encoding: 'jsonParsed' }],
+      },
+      { timeout: 8000, validateStatus: () => true }
+    );
+    const parsed = res.data?.result?.value?.data?.parsed;
+    const dec = parsed?.info?.decimals;
+    if (typeof dec === 'number' && dec >= 0 && dec <= 18) {
+      cachedMintDecimals = dec;
+      return dec;
+    }
+  } catch (e) {
+    console.warn('resolveMintDecimals failed:', e.message);
+  }
+  cachedMintDecimals = TOKEN_DECIMALS;
+  return cachedMintDecimals;
+}
+/** Dexscreener **pair** address (same id as dexscreener.com/solana/...) — optional OHLC + fallback when mint typo */
+const DEXSCREENER_PAIR_ADDRESS = (process.env.DEXSCREENER_PAIR_ADDRESS || '').trim();
+
+function isProjectTokenPaymentType(type) {
+  const t = String(type || '').toLowerCase();
+  return t === 'project' || t === 'aaa';
+}
 
 const ADMIN_DISCORD_IDS = (process.env.ADMIN_DISCORD_IDS || '')
   .split(',')
@@ -97,6 +166,12 @@ const RAFFLE_CLAIM_LIMIT = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+const DISCORD_PUBLIC_USERS_LIMIT = rateLimit({
+  windowMs: 60 * 1000,
+  max: 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function isValidSolanaAddress(s) {
   if (!s || typeof s !== 'string') return false;
@@ -113,7 +188,7 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
 app.use(cookieParser());
 app.use(
   cookieSession({
-    name: 'absurd_apes_session',
+    name: 'ugly_ape_squad_session',
     keys: [SESSION_SECRET],
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -333,6 +408,71 @@ app.get('/api/discord/me', function (req, res) {
     return res.json({ connected: false });
   }
   res.json({ connected: true, user: req.session.discord });
+});
+
+function discordCdnAvatarUrl(discordUser) {
+  const id = String(discordUser.id);
+  if (discordUser.avatar) {
+    const ext = discordUser.avatar.startsWith('a_') ? 'gif' : 'png';
+    return `https://cdn.discordapp.com/avatars/${id}/${discordUser.avatar}.${ext}?size=256`;
+  }
+  try {
+    const idx = Number((BigInt(id) >> 22n) % 6n);
+    return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+  } catch (e) {
+    return 'https://cdn.discordapp.com/embed/avatars/0.png';
+  }
+}
+
+function publicDiscordUserPayload(d) {
+  const gn = d.global_name && String(d.global_name).trim();
+  const displayName = gn || d.username || 'Member';
+  return {
+    id: String(d.id),
+    username: d.username,
+    global_name: d.global_name || null,
+    displayName,
+    avatarUrl: discordCdnAvatarUrl(d),
+  };
+}
+
+// GET ?ids=discordUserId,discordUserId — for Team cards (server must have DISCORD_BOT_TOKEN)
+app.get('/api/discord/public-users', DISCORD_PUBLIC_USERS_LIMIT, async function (req, res) {
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  const idsParam = (req.query.ids || '').trim();
+  if (!idsParam) {
+    return res.json({ users: [], configured: Boolean(DISCORD_BOT_TOKEN) });
+  }
+  const raw = idsParam
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 25);
+  const ids = raw.filter((id) => /^\d{17,20}$/.test(id));
+  if (!DISCORD_BOT_TOKEN) {
+    return res.json({
+      users: [],
+      configured: false,
+    });
+  }
+  const results = await Promise.all(
+    ids.map(async (id) => {
+      try {
+        const r = await axios.get(`${DISCORD_API_V10}/users/${encodeURIComponent(id)}`, {
+          headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` },
+          timeout: 8000,
+          validateStatus: () => true,
+        });
+        if (r.status === 200 && r.data?.id) {
+          return publicDiscordUserPayload(r.data);
+        }
+      } catch (e) {
+        console.warn('Discord public-users:', id, e.message);
+      }
+      return null;
+    })
+  );
+  res.json({ users: results.filter(Boolean), configured: true });
 });
 
 // ——— Logout ———
@@ -827,7 +967,10 @@ app.post('/api/raffles/:id/buy', RAFFLE_BUY_LIMIT, express.json(), async functio
     expectedAmount = String(parseInt(raw, 10) * count);
   } else {
     const storedDecimals = raffle.ticketPriceDecimals != null ? raffle.ticketPriceDecimals : 6;
-    const mintForDecimals = type === 'aaa' && AAA_TOKEN_MINT ? AAA_TOKEN_MINT : (raffle.ticketPriceTokenMint || '');
+    const mintForDecimals =
+      isProjectTokenPaymentType(type) && PROJECT_TOKEN_MINT
+        ? PROJECT_TOKEN_MINT
+        : String(raffle.ticketPriceTokenMint || '').trim();
     let actualDecimals = 6;
     if (HELIUS_API_KEY && mintForDecimals) {
       try {
@@ -1144,11 +1287,10 @@ app.get('/api/token-info', async function (req, res) {
   }
 });
 
-// ——— Discord bot: team avatars + raffle channel announcements ———
-const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+// ——— Discord bot: raffle channel announcements (DISCORD_BOT_TOKEN defined at top) ———
 const DISCORD_RAFFLE_CHANNEL_ID = (process.env.DISCORD_RAFFLE_CHANNEL_ID || '').trim();
 if (!DISCORD_BOT_TOKEN) {
-  console.warn('DISCORD_BOT_TOKEN not set — Team section will show placeholder avatars. Add a Bot token from Discord Developer Portal to fetch Discord usernames and avatars.');
+  console.warn('DISCORD_BOT_TOKEN not set — team Discord profiles and raffle channel posts are disabled. Add a Bot token from the Discord Developer Portal (Bot section).');
 }
 
 /** Post a message to the raffle Discord channel. No-op if channel or token not set. */
@@ -1193,7 +1335,7 @@ function postRaffleNewToDiscord(raffle, siteUrl) {
   const raw = String(raffle.ticketPriceRaw || '0').trim();
   const decimals = raffle.ticketPriceDecimals != null ? Number(raffle.ticketPriceDecimals) : type === 'sol' ? 9 : 6;
   const humanPrice = Number(raw) / Math.pow(10, decimals);
-  const symbol = type === 'sol' ? 'SOL' : type === 'aaa' ? 'AAA' : 'tokens';
+  const symbol = type === 'sol' ? 'SOL' : isProjectTokenPaymentType(type) ? TOKEN_SYMBOL : 'tokens';
   const priceStr = (humanPrice === Math.floor(humanPrice) ? humanPrice : humanPrice.toFixed(4)) + ' ' + symbol;
   const endsAt = raffle.endsAt || raffle.ends_at;
   const endsStr = endsAt ? new Date(endsAt).toLocaleString() : '—';
@@ -1266,7 +1408,7 @@ app.get('/api/discord/user/:id', async function (req, res) {
   }
 });
 
-// ——— Live prices (Jupiter): SOL + AAA token USD; cache 60s ———
+// ——— Live prices (Jupiter): SOL + project token USD; cache 60s ———
 const SOL_MINT = 'So11111111111111111111111111111111111111112';
 let pricesCache = { data: null, ts: 0 };
 const PRICES_CACHE_MS = 60 * 1000;
@@ -1276,7 +1418,7 @@ function parseJupiterPrices(data) {
   if (!data || typeof data !== 'object') return out;
   const d = typeof data.data === 'object' && data.data !== null ? data.data : data;
   const sol = d[SOL_MINT];
-  const tokenData = d[AAA_TOKEN_MINT];
+  const tokenData = d[PROJECT_TOKEN_MINT];
   const solP = sol?.price ?? sol?.usdPrice;
   const tokenP = tokenData?.price ?? tokenData?.usdPrice;
   if (solP != null) out.solUsd = Number(solP);
@@ -1287,17 +1429,83 @@ function parseJupiterPrices(data) {
   return out;
 }
 
+function mergeDexPairIntoOut(out, row) {
+  if (!row || row.priceUsd == null || row.priceUsd === '') return;
+  if (out.tokenUsd == null) out.tokenUsd = Number(row.priceUsd);
+  const pc = row.priceChange;
+  if (pc != null && typeof pc.h24 === 'number') out.priceChange24h = pc.h24;
+  if (row.liquidity?.usd != null) out.liquidityUsd = Number(row.liquidity.usd);
+  if (row.volume?.h24 != null) out.volume24hUsd = Number(row.volume.h24);
+  if (row.marketCap != null) out.marketCapUsd = Number(row.marketCap);
+  if (row.fdv != null) out.fdvUsd = Number(row.fdv);
+}
+
+function mergeDexLatestPairIntoOut(out, pair) {
+  if (!pair || pair.priceUsd == null || pair.priceUsd === '') return;
+  if (out.tokenUsd == null) out.tokenUsd = Number(pair.priceUsd);
+  const pc = pair.priceChange;
+  if (pc != null && typeof pc.h24 === 'number') out.priceChange24h = pc.h24;
+  if (pair.liquidity?.usd != null) out.liquidityUsd = Number(pair.liquidity.usd);
+  if (pair.volume?.h24 != null) out.volume24hUsd = Number(pair.volume.h24);
+  if (pair.marketCap != null) out.marketCapUsd = Number(pair.marketCap);
+  if (pair.fdv != null) out.fdvUsd = Number(pair.fdv);
+}
+
 app.get('/api/prices', async function (req, res) {
   const now = Date.now();
   if (pricesCache.data && now - pricesCache.ts < PRICES_CACHE_MS) {
     return res.json(pricesCache.data);
   }
-  const out = { solUsd: null, tokenUsd: null, tokenPerSol: null };
-  if (!AAA_TOKEN_MINT) {
+  const out = {
+    solUsd: null,
+    tokenUsd: null,
+    tokenPerSol: null,
+    priceChange24h: undefined,
+    liquidityUsd: undefined,
+    volume24hUsd: undefined,
+    marketCapUsd: undefined,
+    fdvUsd: undefined,
+  };
+  if (!PROJECT_TOKEN_MINT) {
     pricesCache = { data: out, ts: now };
     return res.json(out);
   }
-  const ids = [SOL_MINT, AAA_TOKEN_MINT].join(',');
+
+  // 1) DexScreener by SPL mint (best for tokens only listed on DEX)
+  try {
+    const dsRes = await axios.get(
+      'https://api.dexscreener.com/token-pairs/v1/solana/' + encodeURIComponent(PROJECT_TOKEN_MINT),
+      { timeout: 12000, validateStatus: () => true, headers: { Accept: 'application/json' } }
+    );
+    if (dsRes.status === 200 && Array.isArray(dsRes.data) && dsRes.data.length > 0) {
+      const withLiq = dsRes.data.filter(function (p) {
+        return p.priceUsd != null && p.priceUsd !== '' && (p.liquidity?.usd ?? 0) > 0;
+      });
+      const pool = (withLiq.length ? withLiq : dsRes.data).sort(function (a, b) {
+        return (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0);
+      })[0];
+      mergeDexPairIntoOut(out, pool);
+    }
+  } catch (e) {
+    console.warn('DexScreener token-pairs failed', e.message);
+  }
+
+  // 2) Optional pair snapshot (e.g. TOKEN_MINT accidentally set to pair id — still show price)
+  if (DEXSCREENER_PAIR_ADDRESS && (out.tokenUsd == null || out.marketCapUsd == null)) {
+    try {
+      const pr = await axios.get(
+        'https://api.dexscreener.com/latest/dex/pairs/solana/' + encodeURIComponent(DEXSCREENER_PAIR_ADDRESS),
+        { timeout: 12000, validateStatus: () => true, headers: { Accept: 'application/json' } }
+      );
+      const pair = pr.data?.pair || (Array.isArray(pr.data?.pairs) ? pr.data.pairs[0] : null);
+      mergeDexLatestPairIntoOut(out, pair);
+    } catch (e) {
+      console.warn('DexScreener pair snapshot failed', e.message);
+    }
+  }
+
+  // 3) Jupiter (SOL + token)
+  const ids = [SOL_MINT, PROJECT_TOKEN_MINT].join(',');
   const urls = [
     'https://api.jup.ag/price/v3?ids=' + encodeURIComponent(ids),
     'https://lite-api.jup.ag/price/v3?ids=' + encodeURIComponent(ids),
@@ -1305,7 +1513,7 @@ app.get('/api/prices', async function (req, res) {
   for (const url of urls) {
     try {
       const r = await axios.get(url, {
-        timeout: 8000,
+        timeout: 15000,
         validateStatus: () => true,
         headers: { Accept: 'application/json' },
       });
@@ -1314,117 +1522,171 @@ app.get('/api/prices', async function (req, res) {
         if (parsed.solUsd != null) out.solUsd = parsed.solUsd;
         if (parsed.tokenUsd != null) out.tokenUsd = parsed.tokenUsd;
         if (parsed.tokenPerSol != null) out.tokenPerSol = parsed.tokenPerSol;
-        if (out.tokenUsd != null) break;
       }
     } catch (e) {
-      console.warn('Prices fetch failed', url, e.message);
+      console.warn('Prices Jupiter fetch failed', url, e.message);
     }
   }
-  // Fallback: DexScreener token-pairs if Jupiter didn't return token price
-  if (AAA_TOKEN_MINT && out.tokenUsd == null) {
+
+  // 4) SOL/USD without Jupiter (timeouts / rate limits)
+  if (out.solUsd == null) {
     try {
-      const dsRes = await axios.get(
-        'https://api.dexscreener.com/token-pairs/v1/solana/' + encodeURIComponent(AAA_TOKEN_MINT),
-        { timeout: 6000, validateStatus: () => true, headers: { Accept: 'application/json' } }
+      const cg = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd',
+        { timeout: 10000, validateStatus: () => true }
       );
-      if (dsRes.status === 200 && Array.isArray(dsRes.data) && dsRes.data.length > 0) {
-        const priceUsd = dsRes.data[0].priceUsd;
-        if (priceUsd != null && priceUsd !== '') {
-          out.tokenUsd = Number(priceUsd);
-          if (out.solUsd != null && out.solUsd > 0) out.tokenPerSol = out.tokenUsd / out.solUsd;
-        }
-      }
+      const v = cg.data?.solana?.usd;
+      if (v != null) out.solUsd = Number(v);
     } catch (e) {
-      console.warn('DexScreener fallback failed', e.message);
+      console.warn('SOL USD CoinGecko fallback failed', e.message);
     }
   }
-  if (out.solUsd != null && out.tokenUsd != null && out.tokenPerSol == null && out.solUsd > 0) {
+
+  if (out.solUsd != null && out.solUsd > 0 && out.tokenUsd != null && out.tokenPerSol == null) {
     out.tokenPerSol = out.tokenUsd / out.solUsd;
   }
-  // Enrich with DexScreener: 24h change, liquidity, volume, market cap (DEXTools-style)
-  if (AAA_TOKEN_MINT) {
-  try {
-    const dsRes = await axios.get(
-      'https://api.dexscreener.com/token-pairs/v1/solana/' + encodeURIComponent(AAA_TOKEN_MINT),
-      { timeout: 6000, validateStatus: () => true, headers: { Accept: 'application/json' } }
-    );
-    if (dsRes.status === 200 && Array.isArray(dsRes.data) && dsRes.data.length > 0) {
-      const pairs = dsRes.data.filter(function (p) {
-        return p.priceUsd != null && p.priceUsd !== '' && (p.liquidity?.usd ?? 0) > 0;
-      });
-      const best = pairs.sort(function (a, b) { return (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0); })[0];
-      if (best) {
-        if (out.tokenUsd == null && best.priceUsd != null) {
-          out.tokenUsd = Number(best.priceUsd);
-          if (out.solUsd != null && out.solUsd > 0) out.tokenPerSol = out.tokenUsd / out.solUsd;
-        }
-        const pc = best.priceChange;
-        if (pc != null && typeof pc.h24 === 'number') out.priceChange24h = pc.h24;
-        if (best.liquidity?.usd != null) out.liquidityUsd = Number(best.liquidity.usd);
-        if (best.volume?.h24 != null) out.volume24hUsd = Number(best.volume.h24);
-        if (best.marketCap != null) out.marketCapUsd = Number(best.marketCap);
-        if (best.fdv != null) out.fdvUsd = Number(best.fdv);
-      }
-    }
-  } catch (e) {
-    console.warn('DexScreener enrichment failed', e.message);
-  }
-  }
+
   pricesCache = { data: out, ts: now };
   res.json(out);
 });
 
-// ——— 15m OHLC for AAA token (Birdeye); optional BIRDEYE_API_KEY ———
+// ——— OHLC chart: Birdeye (optional key) → GeckoTerminal pool candles (no key, Dex pair liquidity) ———
 const BIRDEYE_API_KEY = process.env.BIRDEYE_API_KEY;
 const OHLC_CACHE_MS = 2 * 60 * 1000;
 let ohlcCache = { data: null, ts: 0 };
 
+const GECKO_TERMINAL_API = 'https://api.geckoterminal.com/api/v2';
+const GECKO_HEADERS = { Accept: 'application/json;version=20230203' };
+const GECKO_AGG_BY_TYPE = {
+  '1m': 1,
+  '3m': 3,
+  '5m': 5,
+  '15m': 15,
+  '30m': 30,
+  '1h': 60,
+  '2h': 120,
+  '4h': 240,
+  '6h': 360,
+  '8h': 480,
+  '12h': 720,
+  '1d': 1440,
+};
+
+async function geckoPrimaryPoolAddress(tokenMint) {
+  const r = await axios.get(
+    `${GECKO_TERMINAL_API}/networks/solana/tokens/${encodeURIComponent(tokenMint)}/pools`,
+    { headers: GECKO_HEADERS, timeout: 12000, validateStatus: () => true }
+  );
+  const rows = r.data?.data;
+  if (!Array.isArray(rows) || !rows.length) return null;
+  const sorted = [...rows].sort(function (a, b) {
+    return Number(b.attributes?.reserve_in_usd || 0) - Number(a.attributes?.reserve_in_usd || 0);
+  });
+  return sorted[0]?.attributes?.address || null;
+}
+
+async function fetchGeckoOhlcvUsd(poolAddress, aggregateMinutes) {
+  const r = await axios.get(
+    `${GECKO_TERMINAL_API}/networks/solana/pools/${encodeURIComponent(poolAddress)}/ohlcv/minute`,
+    {
+      params: { aggregate: aggregateMinutes, limit: 500 },
+      headers: GECKO_HEADERS,
+      timeout: 15000,
+      validateStatus: () => true,
+    }
+  );
+  const list = r.data?.data?.attributes?.ohlcv_list;
+  if (!Array.isArray(list) || !list.length) return [];
+  return list.map(function (row) {
+    return {
+      unix_time: row[0],
+      o: row[1],
+      h: row[2],
+      l: row[3],
+      c: row[4],
+    };
+  });
+}
+
 app.get('/api/token-ohlc', async function (req, res) {
   const type = (req.query.type || '15m').toLowerCase().replace(/\s/g, '');
   const validType = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d'].includes(type) ? type : '15m';
-  if (!BIRDEYE_API_KEY || !AAA_TOKEN_MINT) {
-    return res.json({ success: false, data: { items: [] }, message: 'Chart requires BIRDEYE_API_KEY and AAA_TOKEN_MINT in server .env' });
+  const aggregateMin = GECKO_AGG_BY_TYPE[validType] || 15;
+
+  if (!PROJECT_TOKEN_MINT) {
+    return res.json({
+      success: false,
+      data: { items: [] },
+      message: 'Set TOKEN_MINT in server .env to your SPL token mint (not the Dexscreener pair address).',
+    });
   }
-  const now = Math.floor(Date.now() / 1000);
+
   const cacheKey = validType;
-  if (ohlcCache.data && ohlcCache.type === cacheKey && now * 1000 - ohlcCache.ts < OHLC_CACHE_MS) {
+  if (ohlcCache.data && ohlcCache.type === cacheKey && Date.now() - ohlcCache.ts < OHLC_CACHE_MS) {
     return res.json(ohlcCache.data);
   }
-  const timeTo = now;
-  const timeFrom = now - 7 * 24 * 60 * 60;
-  try {
-    const r = await axios.get(
-      'https://public-api.birdeye.so/defi/v3/ohlcv',
-      {
-        params: {
-          address: AAA_TOKEN_MINT,
-          type: validType,
-          time_from: timeFrom,
-          time_to: timeTo,
-          currency: 'usd',
-        },
-        timeout: 10000,
-        validateStatus: () => true,
-        headers: {
-          'X-API-KEY': BIRDEYE_API_KEY,
-          'Accept': 'application/json',
-        },
+
+  if (BIRDEYE_API_KEY) {
+    const timeTo = Math.floor(Date.now() / 1000);
+    const timeFrom = timeTo - 7 * 24 * 60 * 60;
+    try {
+      const r = await axios.get(
+        'https://public-api.birdeye.so/defi/v3/ohlcv',
+        {
+          params: {
+            address: PROJECT_TOKEN_MINT,
+            type: validType,
+            time_from: timeFrom,
+            time_to: timeTo,
+            currency: 'usd',
+          },
+          timeout: 15000,
+          validateStatus: () => true,
+          headers: {
+            'X-API-KEY': BIRDEYE_API_KEY,
+            Accept: 'application/json',
+          },
+        }
+      );
+      if (r.status === 200 && r.data?.data?.items && r.data.data.items.length > 0) {
+        const payload = { success: true, data: { items: r.data.data.items }, message: '' };
+        ohlcCache = { data: payload, ts: Date.now(), type: cacheKey };
+        return res.json(payload);
       }
-    );
-    if (r.status !== 200 || !r.data?.data?.items) {
-      ohlcCache = { data: { success: false, data: { items: [] } }, ts: Date.now(), type: cacheKey };
-      return res.json(ohlcCache.data);
+    } catch (e) {
+      console.warn('Birdeye OHLC failed', e.message);
     }
-    const payload = { success: true, data: { items: r.data.data.items } };
+  }
+
+  try {
+    let poolAddr = DEXSCREENER_PAIR_ADDRESS || null;
+    if (!poolAddr) poolAddr = await geckoPrimaryPoolAddress(PROJECT_TOKEN_MINT);
+    if (!poolAddr) {
+      return res.json({
+        success: false,
+        data: { items: [] },
+        message:
+          'No OHLC pool found. Set TOKEN_MINT to the SPL token mint (check Dexscreener → pair → base token address), or set DEXSCREENER_PAIR_ADDRESS to the pair id from dexscreener.com/solana/…',
+      });
+    }
+    const items = await fetchGeckoOhlcvUsd(poolAddr, aggregateMin);
+    if (!items.length) {
+      return res.json({
+        success: false,
+        data: { items: [] },
+        message: 'GeckoTerminal returned no candles for this pool.',
+      });
+    }
+    const payload = { success: true, data: { items }, message: '' };
     ohlcCache = { data: payload, ts: Date.now(), type: cacheKey };
     res.json(payload);
   } catch (e) {
-    console.warn('Birdeye OHLC failed', e.message);
+    console.warn('GeckoTerminal OHLC failed', e.message);
     res.json({ success: false, data: { items: [] }, message: e.message || 'OHLC fetch failed' });
   }
 });
 
-// ——— Verify: wallet's AAA token balance + NFT count per collection ———
+// ——— Verify: wallet project token balance + NFT count per collection ———
 app.get('/api/verify', async function (req, res) {
   const wallet = (req.query.wallet || '').trim();
   if (!wallet) {
@@ -1434,7 +1696,7 @@ app.get('/api/verify', async function (req, res) {
   const out = {
     token: 0,
     tokenFormatted: '0',
-    absurdApesCount: 0,
+    col1Count: 0,
     col2Count: 0,
     totalNfts: 0,
   };
@@ -1444,8 +1706,10 @@ app.get('/api/verify', async function (req, res) {
   }
 
   try {
-    // 1) AAA token balance — Helius getTokenAccounts(owner, mint)
-    if (AAA_TOKEN_MINT) {
+    const mintDecimals = await resolveMintDecimals();
+
+    // 1) Project token balance — Helius getTokenAccounts(owner, mint)
+    if (PROJECT_TOKEN_MINT) {
       const tokenRes = await axios.post(
         `${HELIUS_RPC}/?api-key=${HELIUS_API_KEY}`,
         {
@@ -1454,7 +1718,7 @@ app.get('/api/verify', async function (req, res) {
           method: 'getTokenAccounts',
           params: {
             owner: wallet,
-            mint: AAA_TOKEN_MINT,
+            mint: PROJECT_TOKEN_MINT,
             limit: 10,
           },
         },
@@ -1465,7 +1729,7 @@ app.get('/api/verify', async function (req, res) {
       for (const acc of tokenAccounts) {
         totalRaw += Number(acc.amount || 0);
       }
-      out.token = totalRaw / Math.pow(10, TOKEN_DECIMALS);
+      out.token = totalRaw / Math.pow(10, mintDecimals);
       out.tokenFormatted = formatTokenAmount(out.token);
     }
 
@@ -1620,12 +1884,16 @@ app.get('/api/collections', async function (req, res) {
       }
     }
 
+    // Marketplace APIs often append " - Collection"; always use configured display names for tiles.
+    out.name = col.name;
+    out.description = null;
+
     results.push(out);
   }
   res.json({ collections: results });
 });
 
-// ——— Holders table (token + NFT by collection), filter/sort by total | token | absurdApes | col2 | nfts ———
+// ——— Holders table (token + NFT by collection), filter/sort by total | token | col1 | col2 | nfts ———
 // Decode owner (32 bytes) + amount (8 bytes LE) from getProgramAccounts dataSlice(32, 40)
 function decodeTokenAccountOwnerAndAmount(dataBase64) {
   if (!dataBase64) return null;
@@ -1642,9 +1910,10 @@ function decodeTokenAccountOwnerAndAmount(dataBase64) {
 
 app.get('/api/holders', async function (req, res) {
   const sortBy = (req.query.sort || 'total').toLowerCase();
-  const validSort = ['total', 'token', 'absurdApes', 'col2', 'nfts'].includes(sortBy) ? sortBy : 'total';
+  const sortNorm = String(sortBy || '').toLowerCase();
+  const validSort = ['total', 'token', 'col1', 'col2', 'nfts'].includes(sortNorm) ? sortNorm : 'total';
 
-  const holderMap = new Map(); // wallet -> { tokenBalance, tokenBalanceFormatted, absurdApesCount, col2Count }
+  const holderMap = new Map(); // wallet -> counts keyed by COLLECTIONS[].countKey
 
   function getOrCreate(wallet) {
     if (!holderMap.has(wallet)) {
@@ -1655,8 +1924,10 @@ app.get('/api/holders', async function (req, res) {
     return holderMap.get(wallet);
   }
 
-  // 1) Token holders (AAA) via getProgramAccounts — all SPL token accounts for this mint
-  if (HELIUS_API_KEY && AAA_TOKEN_MINT) {
+  const mintDecimals = await resolveMintDecimals();
+
+  // 1) Token holders (project token) via getProgramAccounts — all SPL token accounts for this mint
+  if (HELIUS_API_KEY && PROJECT_TOKEN_MINT) {
     try {
       const gpaRes = await axios.post(
         `${HELIUS_RPC}/?api-key=${HELIUS_API_KEY}`,
@@ -1671,7 +1942,7 @@ app.get('/api/holders', async function (req, res) {
               commitment: 'confirmed',
               filters: [
                 { dataSize: 165 },
-                { memcmp: { offset: 0, bytes: AAA_TOKEN_MINT } },
+                { memcmp: { offset: 0, bytes: PROJECT_TOKEN_MINT } },
               ],
               dataSlice: { offset: 32, length: 40 },
             },
@@ -1680,7 +1951,7 @@ app.get('/api/holders', async function (req, res) {
         { timeout: 30000, validateStatus: () => true }
       );
       const accounts = gpaRes.data?.result || [];
-      const decimals = TOKEN_DECIMALS;
+      const decimals = mintDecimals;
       for (const item of accounts) {
         const data = item.account?.data;
         if (!data) continue;
@@ -1700,8 +1971,8 @@ app.get('/api/holders', async function (req, res) {
       const col = COLLECTIONS[c];
       const key = col.countKey;
       if (!key || !col.collectionMint) {
-        if (col.slug === 'absurd_horizons' && !col.collectionMint) {
-          console.warn('Holders: ABSURD_HORIZONS_COLLECTION_MINT not set in .env — Horizons counts will be 0. Get the collection address from Solscan (any minted NFT → Collection) or LaunchMyNFT.');
+        if (!col.collectionMint) {
+          console.warn('Holders: collection on-chain mint not set for', col.slug, '— NFT counts for this collection will be 0.');
         }
         continue;
       }
@@ -1810,8 +2081,8 @@ app.get('/api/holders', async function (req, res) {
   // Filter out wallets with no holdings for the selected view
   if (validSort === 'token') {
     list = list.filter((h) => (h.tokenBalance || 0) > 0);
-  } else if (validSort === 'absurdApes') {
-    list = list.filter((h) => (h.absurdApesCount || 0) > 0);
+  } else if (validSort === 'col1') {
+    list = list.filter((h) => (h.col1Count || 0) > 0);
   } else if (validSort === 'col2') {
     list = list.filter((h) => (h.col2Count || 0) > 0);
   } else {
@@ -1819,7 +2090,7 @@ app.get('/api/holders', async function (req, res) {
   }
 
   if (validSort === 'token') list.sort((a, b) => b.tokenBalance - a.tokenBalance);
-  else if (validSort === 'absurdApes') list.sort((a, b) => (b.absurdApesCount || 0) - (a.absurdApesCount || 0));
+  else if (validSort === 'col1') list.sort((a, b) => (b.col1Count || 0) - (a.col1Count || 0));
   else if (validSort === 'col2') list.sort((a, b) => (b.col2Count || 0) - (a.col2Count || 0));
   else if (validSort === 'nfts') list.sort((a, b) => b.totalNfts - a.totalNfts);
   else list.sort((a, b) => b.totalScore - a.totalScore);
@@ -1838,7 +2109,7 @@ function formatTokenAmount(n) {
 // On Vercel, do not listen; the app is used by api/[[...path]].js
 if (process.env.VERCEL !== '1') {
   app.listen(PORT, function () {
-    console.log('Absurd Apes server at http://localhost:' + PORT);
+    console.log('Ugly Ape Squad server at http://localhost:' + PORT);
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       console.log('Discord login disabled: set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET in .env');
     } else {

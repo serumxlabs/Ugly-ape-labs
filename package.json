@@ -1,12 +1,12 @@
 {
-  "name": "absurd-apes",
+  "name": "ugly-ape-squad",
   "version": "1.0.0",
-  "description": "Absurd Apes NFT + Token site with Discord login",
+  "description": "Ugly Ape Squad NFT + Token site with Discord login",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "vercel-build": "node scripts/inject-og.js && node scripts/copy-static.js",
+    "vercel-build": "node scripts/copy-static.js && node scripts/inject-og.js",
     "db:migrate": "node scripts/db-migrate.js",
     "cache-collections": "node scripts/cache-collection-images.js"
   },

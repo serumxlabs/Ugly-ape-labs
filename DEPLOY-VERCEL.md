@@ -23,7 +23,8 @@ In Vercel: **Project** → **Settings** → **Environment Variables**. Add these
 | `PRIZE_WALLET` | Yes (for Raffles) | Solana address for prize NFTs and (if unset) ticket payments. |
 | `RAFFLE_TREASURY_WALLET` | Optional | Where ticket payments go; defaults to `PRIZE_WALLET`. |
 | `ADMIN_DISCORD_IDS` | Yes (for Raffles admin) | Comma-separated Discord user IDs who can create raffles. |
-| `AAA_TOKEN_MINT` | Optional | Project token mint for prices/verify/holders. |
+| `TOKEN_MINT` | Optional | Project SPL mint for prices, verify, holders, and charts. |
+| `TOKEN_SYMBOL` | Optional | Ticker label for raffles/UI (default `TOKEN`). |
 | `DISCORD_BOT_TOKEN` | Optional | For Team section avatars and raffle announcements. |
 | `DISCORD_RAFFLE_CHANNEL_ID` | Optional | Channel ID where the bot posts new raffles and winners. See [docs/DISCORD-BOT-INVITE.md](docs/DISCORD-BOT-INVITE.md) for the bot invite link. |
 | `BIRDEYE_API_KEY` | Optional | For token chart. |
@@ -33,7 +34,7 @@ In Vercel: **Project** → **Settings** → **Environment Variables**. Add these
 In [Discord Developer Portal](https://discord.com/developers/applications) → your app → **OAuth2** → **Redirects**:
 
 - Add: `https://<your-vercel-domain>/api/discord/callback`  
-  (e.g. `https://absurd-apes-xxx.vercel.app/api/discord/callback`)
+  (e.g. `https://your-app.vercel.app/api/discord/callback`)
 
 ## 4. Database migration (once per production DB)
 

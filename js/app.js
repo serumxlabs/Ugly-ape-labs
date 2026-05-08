@@ -1,13 +1,13 @@
 /**
  * Project dashboard — config-driven template for NFT/token projects.
- * All project-specific copy and URLs come from window.ABSURD_APES_CONFIG (js/config.js).
+ * All project-specific copy and URLs come from window.UGLY_APE_SQUAD_CONFIG (js/config.js).
  */
 
 (function () {
   'use strict';
 
   const BREAKPOINT = 900;
-  const CONFIG = window.ABSURD_APES_CONFIG || { holderPortalUrl: '', endpoints: {}, discordConnectUrl: '' };
+  const CONFIG = window.UGLY_APE_SQUAD_CONFIG || { holderPortalUrl: '', endpoints: {}, discordConnectUrl: '' };
   const BASE_PATH = '';
   const PORTAL_URL = (CONFIG.holderPortalUrl || '').replace(/\/$/, '');
   const HOLDINGS_ENDPOINT = PORTAL_URL && CONFIG.endpoints?.holdings ? PORTAL_URL + CONFIG.endpoints.holdings : '';
@@ -31,44 +31,20 @@
     var heroTagline = document.getElementById('hero-tagline');
     if (heroTagline) heroTagline.textContent = hero.tagline || '';
 
-    var introCfg = c.intro || {};
-    var introTitleEl = document.getElementById('intro-title');
-    if (introTitleEl && introCfg.title) introTitleEl.textContent = introCfg.title;
-    var introBodyEl = document.getElementById('intro-body');
-    if (introBodyEl && introCfg.body) introBodyEl.innerHTML = introCfg.body;
-
-    var merch = c.merchPacks || {};
-    var merchTitleEl = document.getElementById('merch-packs-title');
-    if (merchTitleEl && merch.title) merchTitleEl.textContent = merch.title;
-    var merchLeadEl = document.getElementById('merch-packs-lead');
-    if (merchLeadEl) merchLeadEl.textContent = merch.lead || '';
-    var merchBg = document.getElementById('merch-packs-bg');
-    if (merchBg && merch.backgroundImage) {
-      function merchBgResolvedUrl(path) {
-        if (!path) return '';
-        var p = path.replace(/^\.\//, '');
-        return p.indexOf('/') === 0 ? p : '/' + p;
-      }
-      function applyMerchBackground() {
-        var desktop = merch.backgroundImage;
-        var mobile = merch.backgroundImageMobile || desktop;
-        var path = window.matchMedia('(max-width: 899px)').matches ? mobile : desktop;
-        merchBg.style.backgroundImage = 'url("' + merchBgResolvedUrl(path) + '")';
-      }
-      applyMerchBackground();
-      var mqMerchBg = window.matchMedia('(max-width: 899px)');
-      if (mqMerchBg.addEventListener) mqMerchBg.addEventListener('change', applyMerchBackground);
-      else if (mqMerchBg.addListener) mqMerchBg.addListener(applyMerchBackground);
+    var dashTitle = document.getElementById('dashboard-title');
+    if (dashTitle) {
+      var dashLabel = c.dashboardTitle != null && String(c.dashboardTitle).length ? c.dashboardTitle : projectName;
+      dashTitle.textContent = dashLabel;
     }
-
-    // Dashboard brand (wordmark image replaces sidebar title text)
-    var dashTitleImg = document.getElementById('dashboard-title-img');
-    if (dashTitleImg && c.dashboardTitleImage) {
-      var dtiPath = c.dashboardTitleImage.replace(/^\.\//, '');
-      var dtiUrl = dtiPath.indexOf('/') === 0 ? dtiPath : '/' + dtiPath;
-      dashTitleImg.src = dtiUrl;
-      dashTitleImg.alt = projectName;
+    var heroSectionTitleInner = document.getElementById('hero-section-title-inner');
+    if (heroSectionTitleInner) heroSectionTitleInner.textContent = hero.title || projectName;
+    var heroAudioEl = document.getElementById('hero-audio');
+    if (heroAudioEl && hero.musicSrc) {
+      var ms = hero.musicSrc.replace(/^\.\//, '');
+      heroAudioEl.src = ms.indexOf('/') === 0 ? ms : '/' + ms;
     }
+    var heroAudioLabel = document.getElementById('hero-audio-label');
+    if (heroAudioLabel && hero.musicLabel != null && hero.musicLabel !== '') heroAudioLabel.textContent = hero.musicLabel;
     var dashLogos = document.querySelectorAll('.dashboard__logo-img, .footer__logo');
     dashLogos.forEach(function (img) { if (img && logoUrl) img.src = logoUrl; });
     var logoAlt = document.querySelector('.dashboard__logo-img');
@@ -81,11 +57,17 @@
     var tokenLabelText = (token.navLabel != null && token.navLabel !== '') ? token.navLabel : tokenSymbol;
     tokenLabels.forEach(function (el) { el.textContent = tokenLabelText; });
 
-    // Token section: token address, Solana logo, DEXTools + Solscan links
+    // Token section: token address, Solana logo, Dexscreener + Birdeye + Solscan links
     var contractEl = document.getElementById('tokenomics-contract');
     if (contractEl && c.tokenMint) contractEl.textContent = c.tokenMint;
     var solanaLogoEl = document.getElementById('tokenomics-solana-logo');
     if (solanaLogoEl) solanaLogoEl.src = hero.solanaLogoUrl || '/assets/solana-logo.svg';
+    var dexscreenerLink = document.getElementById('tokenomics-dexscreener-link');
+    if (dexscreenerLink) {
+      dexscreenerLink.href =
+        c.tokenDexscreenerUrl ||
+        (c.tokenMint ? 'https://dexscreener.com/solana/' + encodeURIComponent(c.tokenMint) : '#');
+    }
     var dextoolsLink = document.getElementById('tokenomics-dextools-link');
     if (dextoolsLink && c.tokenDextoolsPairUrl) dextoolsLink.href = c.tokenDextoolsPairUrl;
     var birdeyeLink = document.getElementById('tokenomics-birdeye-link');
@@ -106,6 +88,8 @@
     if (tokenChartLabel && token.chartLabel) tokenChartLabel.textContent = token.chartLabel;
     var tokenSummary = document.getElementById('tokenomics-summary-text');
     if (tokenSummary && token.summaryText) tokenSummary.textContent = token.summaryText;
+    var tokenSectionLead = document.getElementById('token-section-lead');
+    if (tokenSectionLead && token.sectionLead) tokenSectionLead.textContent = token.sectionLead;
 
     // Optional shop link (sidebar)
     var shopUrl = c.shopUrl;
@@ -119,22 +103,6 @@
     var footerCopyText = document.getElementById('footer-copy-text');
     if (footerCopyText) footerCopyText.textContent = c.footerCopy || projectName;
 
-    // X spaces
-    var xSpacesLead = document.getElementById('x-spaces-lead');
-    if (xSpacesLead) xSpacesLead.textContent = c.xSpacesLead || 'Tune in to our weekly X space...';
-    var xSpacesTime = document.getElementById('x-spaces-time');
-    if (xSpacesTime) xSpacesTime.innerHTML = c.xSpacesTime || 'Mondays<br>4-5pm EST';
-    var xSpacesHosts = document.getElementById('x-spaces-hosts');
-    if (xSpacesHosts && c.xSpacesHosts && c.xSpacesHosts.length) {
-      var hostLinks = c.xSpacesHosts.map(function (h) {
-        return '<a href="' + (h.url || '#') + '" target="_blank" rel="noopener" class="x-spaces__link">' + (h.label || '') + '</a>';
-      });
-      xSpacesHosts.innerHTML = hostLinks.length === 2
-        ? 'Hosted by ' + hostLinks[0] + '<br>with co-host ' + hostLinks[1]
-        : 'Hosted by ' + hostLinks.join(' and ');
-    }
-    var xSpacesTagline = document.getElementById('x-spaces-tagline');
-    if (xSpacesTagline && c.xSpacesTagline) xSpacesTagline.innerHTML = '"' + c.xSpacesTagline + '"';
     // Partners
     var partnersLead = document.getElementById('partners-lead');
     if (partnersLead) partnersLead.textContent = c.partnersLead || 'Partners.';
@@ -203,7 +171,7 @@
 
     // Holders labels (sidebar + mobile panel key labels)
     var labels = c.holdingsLabels || {};
-    ['token', 'absurdApes', 'col2', 'totalNfts'].forEach(function (key) {
+    ['token', 'col1', 'col2', 'totalNfts'].forEach(function (key) {
       if (!labels[key]) return;
       document.querySelectorAll('[data-holdings-key="' + key + '"]').forEach(function (el) {
         el.textContent = labels[key];
@@ -214,100 +182,44 @@
     var sortOpts = c.holdersSortOptions || {};
     var sortToken = document.querySelector('#holders-sort option[value="token"]');
     if (sortToken && sortOpts.token) sortToken.textContent = sortOpts.token;
-    var sortAbsurdApes = document.querySelector('#holders-sort option[value="absurdApes"]');
-    if (sortAbsurdApes && sortOpts.absurdApes) sortAbsurdApes.textContent = sortOpts.absurdApes;
+    var sortCol1 = document.querySelector('#holders-sort option[value="col1"]');
+    if (sortCol1 && sortOpts.col1) sortCol1.textContent = sortOpts.col1;
     var sortCol2 = document.querySelector('#holders-sort option[value="col2"]');
     if (sortCol2 && sortOpts.col2) sortCol2.textContent = sortOpts.col2;
     var thToken = document.querySelector('.holders-table th[data-col="token"]');
     if (thToken && labels.token) thToken.textContent = labels.token;
-    var thAbsurdApes = document.querySelector('.holders-table th[data-col="absurdApes"]');
-    if (thAbsurdApes && labels.absurdApes) thAbsurdApes.textContent = labels.absurdApes;
+    var thCol1 = document.querySelector('.holders-table th[data-col="col1"]');
+    if (thCol1 && labels.col1) thCol1.textContent = labels.col1;
     var thCol2 = document.querySelector('.holders-table th[data-col="col2"]');
     if (thCol2 && labels.col2) thCol2.textContent = labels.col2;
+
+    var mutants = c.mutants || {};
+    var mutantsMintBtn = document.getElementById('mutants-mint-btn');
+    if (mutantsMintBtn && mutants.mintUrl) mutantsMintBtn.href = mutants.mintUrl;
+    var mutantsPartner = document.querySelector('.mutants__partner-brand');
+    if (mutantsPartner && mutants.partnerUrl) mutantsPartner.href = mutants.partnerUrl;
+    var mutantsLogo = document.querySelector('.mutants__partner-logo');
+    if (mutantsLogo && mutants.partnerLogoUrl) mutantsLogo.src = mutants.partnerLogoUrl.replace(/^\.\//, '');
+    var mutantsLead = document.getElementById('mutants-section-lead');
+    if (mutantsLead && mutants.sectionLead) mutantsLead.textContent = mutants.sectionLead;
   }
   applyProjectConfig();
 
-  // Horizons alpha: expandable on desktop (Read more / Read less)
-  (function () {
-    var btn = document.getElementById('horizons-alpha-read-more');
-    var block = document.getElementById('horizons-alpha');
-    if (!btn || !block) return;
-    btn.addEventListener('click', function () {
-      var expanded = block.classList.toggle('horizons__alpha--expanded');
-      btn.setAttribute('aria-expanded', expanded);
-      btn.textContent = expanded ? 'Read less' : 'Read more';
-    });
+  (function normalizeLegacyPaths() {
+    var p = (window.location.pathname || '').replace(/\/$/, '') || '/';
+    if (p === '/raffles' || p === '/merch-packs') {
+      history.replaceState(null, '', '/' + (window.location.hash || ''));
+    }
+    if (window.location.hash === '#intro') {
+      history.replaceState(null, '', p + '#collections');
+    }
   })();
 
-  // ----- Client-side route: home vs raffles (no full reload, dashboard stays) -----
-  function getRoute() {
-    var path = window.location.pathname.replace(/\/$/, '') || '/';
-    if (path === '/raffles') return 'raffles';
-    if (path === '/merch-packs') return 'merch-packs';
-    return 'home';
-  }
   var mainHome = document.getElementById('main-home');
-  var mainRaffles = document.getElementById('main-raffles');
-  var mainMerch = document.getElementById('main-merch');
-  var routeLinks = document.querySelectorAll('[data-route="home"], [data-route="raffles"], [data-route="merch-packs"]');
+  if (mainHome) mainHome.hidden = false;
+  document.body.classList.add('route-home');
 
-  function setRouteActive(route) {
-    routeLinks.forEach(function (link) {
-      /* On home route, setActiveSection controls which item is active; SPA routes get route-active */
-      var linkRoute = link.getAttribute('data-route');
-      var isActive = linkRoute === route && route !== 'home';
-      link.classList.toggle('dashboard__link--active', isActive);
-      link.classList.toggle('dashboard-bottom__item--active', isActive);
-      var pageRoute = route === 'raffles' || route === 'merch-packs';
-      link.setAttribute('aria-current', isActive && pageRoute && linkRoute === route ? 'page' : 'false');
-    });
-  }
-
-  function showView(route) {
-    if (mainHome) mainHome.hidden = route !== 'home';
-    if (mainRaffles) mainRaffles.hidden = route !== 'raffles';
-    if (mainMerch) mainMerch.hidden = route !== 'merch-packs';
-    document.body.classList.toggle('route-merch-packs', route === 'merch-packs');
-    document.body.classList.toggle('route-home', route === 'home');
-    setRouteActive(route);
-    var heroTitleInner = document.getElementById('hero-title-inner');
-    if (heroTitleInner) {
-      var merchCfg = CONFIG.merchPacks || {};
-      if (route === 'raffles') heroTitleInner.textContent = 'ABSURD RAFFLES';
-      else if (route === 'merch-packs') heroTitleInner.textContent = merchCfg.headerTitle || 'ABSURD MERCH';
-      else heroTitleInner.textContent = CONFIG.hero && CONFIG.hero.title ? CONFIG.hero.title : CONFIG.projectName || 'Project';
-    }
-    if (route === 'raffles' && typeof window.initRafflesPage === 'function') window.initRafflesPage();
-    if (route === 'merch-packs') {
-      setTimeout(function () {
-        if (typeof window.initMerchWaitlistPage === 'function') window.initMerchWaitlistPage();
-      }, 0);
-    }
-    if (route === 'home') setActiveSection(getSectionIdFromHash());
-    else {
-      navLinks.forEach(function (link) {
-        link.classList.remove('dashboard__link--active', 'dashboard-bottom__item--active');
-      });
-    }
-  }
-
-  routeLinks.forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      var href = link.getAttribute('href');
-      if (!href || href === '#' || link.target === '_blank') return;
-      /* Home is href="#home" and handled by section nav (scroll + hash); only handle full-page routes here */
-      if (href.indexOf('#') === 0) return;
-      var path = href.split('?')[0].split('#')[0].replace(/\/$/, '') || '/';
-      if (path === '/raffles' || path === '/merch-packs') {
-        e.preventDefault();
-        history.pushState(null, '', href);
-        showView(getRoute());
-      }
-    });
-  });
-  window.addEventListener('popstate', function () { showView(getRoute()); });
-
-  // ----- Section highlighting (home view only) -----
+  // ----- Section highlighting -----
   const navLinks = document.querySelectorAll('[data-section]');
   const sections = document.querySelectorAll('.section');
   var navScrollInProgress = false;
@@ -346,23 +258,18 @@
       const sectionId = link.getAttribute('data-section');
       if (sectionId && link.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
-        if (getRoute() === 'raffles' || getRoute() === 'merch-packs') {
-          history.pushState(null, '', '/#' + sectionId);
-          showView('home');
-        }
         scrollToSection(sectionId);
       }
     });
   });
 
   window.addEventListener('hashchange', function () {
-    if (getRoute() !== 'home') return;
     if (!navScrollInProgress) setActiveSection(getSectionIdFromHash());
   });
 
   const observer = new IntersectionObserver(
     function (entries) {
-      if (getRoute() !== 'home' || navScrollInProgress) return;
+      if (navScrollInProgress) return;
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         const id = entry.target.id;
@@ -380,142 +287,34 @@
     if (section.id) observer.observe(section);
   });
 
-  showView(getRoute());
+  setActiveSection(getSectionIdFromHash());
 
-  // ----- Hero scroll animations (tagline moves left, body moves right and up) -----
+  // ----- Hero ambient audio (play / pause) -----
   (function () {
-    var heroSection = document.getElementById('home');
-    var heroTagline = document.getElementById('hero-tagline');
-    var heroContent = document.querySelector('.hero-home__content');
-    var headerTitle = document.getElementById('hero-title');
-    if (!heroSection || !heroTagline || !heroContent) return;
-
-    var taglineMoveLeft = 400;
-    var taglineMoveDown = 200;
-    var bodyMoveRight = 280;
-    var bodyMoveUp = 140;
-    var taglineBaseTopPx = null;
-
-    function getScrollRoot() {
-      var el = heroSection;
-      while (el && el !== document.body) {
-        var style = window.getComputedStyle(el);
-        var overflow = (style.overflowY || style.overflow || '') + (style.overflowX || '');
-        if (/(auto|scroll|overlay)/.test(overflow)) return el;
-        el = el.parentElement;
-      }
-      return window;
+    var audio = document.getElementById('hero-audio');
+    var btn = document.getElementById('hero-audio-btn');
+    var iconPlay = btn && btn.querySelector('.hero-home__audio-icon--play');
+    var iconPause = btn && btn.querySelector('.hero-home__audio-icon--pause');
+    if (!audio || !btn) return;
+    function syncUi() {
+      var playing = !audio.paused;
+      if (iconPlay) iconPlay.hidden = playing;
+      if (iconPause) iconPause.hidden = !playing;
+      btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+      btn.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
     }
-
-    function tick() {
-      if (getRoute() !== 'home' || !heroSection.isConnected) {
-        if (headerTitle) headerTitle.style.opacity = '';
-        return;
-      }
-      var rect = heroSection.getBoundingClientRect();
-      var h = rect.height;
-      var top = rect.top;
-      var progress = top <= 0 ? Math.min(1, -top / h) : 0;
-      var txTag = -progress * taglineMoveLeft;
-      var tyTag = progress * taglineMoveDown;
-      var txBody = progress * bodyMoveRight;
-      var tyBody = -progress * bodyMoveUp;
-      if (taglineBaseTopPx == null && progress === 0) {
-        taglineBaseTopPx = heroTagline.getBoundingClientRect().top;
-      }
-      if (taglineBaseTopPx != null) {
-        heroTagline.style.top = (taglineBaseTopPx + tyTag) + 'px';
-        heroTagline.style.visibility = rect.bottom < 0 ? 'hidden' : 'visible';
-      }
-      heroTagline.style.transform = 'translateX(' + txTag + 'px)';
-      heroContent.style.transform = 'translate3d(' + txBody + 'px, ' + tyBody + 'px, 0)';
-      heroContent.style.setProperty('--last-line-scale', 1 + Math.pow(progress, 0.6) * 2.2);
-      if (headerTitle) {
-        headerTitle.style.opacity = progress < 0.75 ? '1' : String(1 - (progress - 0.75) / 0.25);
-        headerTitle.style.pointerEvents = progress >= 0.75 ? 'none' : '';
-      }
-      heroTagline.style.opacity = progress < 0.75 ? '1' : String(1 - (progress - 0.75) / 0.25);
-      heroTagline.style.pointerEvents = progress >= 0.75 ? 'none' : '';
-    }
-
-    var ticking = false;
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(function () {
-          tick();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    var scrollRoot = getScrollRoot();
-    if (scrollRoot === window) {
-      window.addEventListener('scroll', onScroll, { passive: true });
-    } else {
-      scrollRoot.addEventListener('scroll', onScroll, { passive: true });
-    }
-    window.addEventListener('resize', tick);
-    tick();
-  })();
-
-  // ----- Horizons section: arrow moves down with scroll -----
-  (function () {
-    var section = document.getElementById('horizons');
-    if (!section) return;
-
-    function updateHorizonsScroll() {
-      var rect = section.getBoundingClientRect();
-      var vh = window.innerHeight;
-      var progress;
-      var isMobilePortrait = window.innerWidth <= 899 && window.matchMedia('(orientation: portrait)').matches;
-      var imageHeightPx = isMobilePortrait ? window.innerWidth * 91 / 100 : 0;
-
-      if (rect.height <= 0) {
-        progress = 0;
-      } else if (isMobilePortrait && imageHeightPx > 0) {
-        /* Mobile portrait: arrow moves 0→1 as section top goes from 91vw below viewport to viewport top. Animation runs while image is coming into view. */
-        if (rect.top >= imageHeightPx) {
-          progress = 0;
-        } else if (rect.top <= 0) {
-          progress = 1;
-        } else {
-          progress = (imageHeightPx - rect.top) / imageHeightPx;
-          progress = Math.max(0, Math.min(1, progress));
-        }
-      } else if (rect.bottom >= vh) {
-        progress = 0;
-      } else if (rect.height >= vh) {
-        var travel = rect.height - vh;
-        progress = 1 + rect.top / travel;
-        progress = Math.max(0, Math.min(1, progress));
+    btn.addEventListener('click', function () {
+      if (audio.paused) {
+        var p = audio.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
       } else {
-        progress = (vh - rect.bottom) / (vh - rect.height);
-        progress = Math.max(0, Math.min(1, progress));
+        audio.pause();
       }
-      section.style.setProperty('--horizons-scroll', String(progress));
-    }
-
-    var ticking = false;
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(function () {
-          updateHorizonsScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', updateHorizonsScroll);
-    /* Class .horizons--arrow-at-top in HTML keeps arrow at top until we remove it here (no variable/cache issues) */
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        section.classList.remove('horizons--arrow-at-top');
-        updateHorizonsScroll();
-      });
     });
+    audio.addEventListener('play', syncUi);
+    audio.addEventListener('pause', syncUi);
+    audio.addEventListener('ended', syncUi);
+    syncUi();
   })();
 
   // ----- Wallet (Solana) -----
@@ -570,7 +369,6 @@
     updateConnectWalletButtonLabel();
     if (typeof syncVerifyModalState === 'function') syncVerifyModalState();
     if (connected && window.checkAlreadyVerified) window.checkAlreadyVerified();
-    if (connected && document.getElementById('main-raffles') && !document.getElementById('main-raffles').hidden && typeof window.initRafflesPage === 'function') window.initRafflesPage();
   }
 
   function connectWithProvider(provider) {
@@ -691,16 +489,16 @@
 
   function showHoldings(data) {
     var tokenVal = data && data.tokenFormatted != null ? data.tokenFormatted : (data && data.token != null ? String(data.token) : '—');
-    var absurdApes = data && data.absurdApesCount != null ? String(data.absurdApesCount) : '—';
+    var col1 = data && data.col1Count != null ? String(data.col1Count) : '—';
     var col2 = data && data.col2Count != null ? String(data.col2Count) : '—';
     var totalNfts = data && data.totalNfts != null ? String(data.totalNfts) : '—';
     [
       [document.getElementById('holdings-token'), document.getElementById('holdings-token-mobile')],
-      [document.getElementById('holdings-absurdApes'), document.getElementById('holdings-absurdApes-mobile')],
+      [document.getElementById('holdings-col1'), document.getElementById('holdings-col1-mobile')],
       [document.getElementById('holdings-col2'), document.getElementById('holdings-col2-mobile')],
       [document.getElementById('holdings-total-nfts'), document.getElementById('holdings-total-nfts-mobile')],
     ].forEach(function (pair, i) {
-      var val = [tokenVal, absurdApes, col2, totalNfts][i];
+      var val = [tokenVal, col1, col2, totalNfts][i];
       if (pair[0]) pair[0].textContent = val;
       if (pair[1]) pair[1].textContent = val;
     });
@@ -748,7 +546,7 @@
               if (!d) return null;
               return {
                 tokenFormatted: d.token != null ? String(d.token) : '0',
-                absurdApesCount: 0,
+                col1Count: 0,
                 col2Count: 0,
                 totalNfts: d.nfts != null ? d.nfts : 0,
               };
@@ -1342,80 +1140,110 @@
     link.addEventListener('click', closeMobilePanel);
   });
 
-  // ----- Collections embeds (from /api/collections) -----
+  function updateMutantsSectionFromCollections(collections) {
+    var cfg = CONFIG.mutants || {};
+    var slug = cfg.collectionSlug || 'mutant_ugly_ape_squad_collection';
+    var total = cfg.totalSupply != null ? Number(cfg.totalSupply) : 2222;
+    var mintedEl = document.getElementById('mutants-minted');
+    var totalEl = document.getElementById('mutants-total');
+    var fillEl = document.getElementById('mutants-progress-fill');
+    var barEl = document.getElementById('mutants-progress');
+    if (!mintedEl || !fillEl) return;
+    if (totalEl) totalEl.textContent = String(total);
+    var col = null;
+    if (collections && collections.length) {
+      for (var i = 0; i < collections.length; i++) {
+        if (collections[i].symbol === slug) {
+          col = collections[i];
+          break;
+        }
+      }
+    }
+    var minted = col && col.supply != null ? Number(col.supply) : null;
+    if (minted == null || isNaN(minted)) {
+      mintedEl.textContent = '—';
+      fillEl.style.width = '0%';
+      if (barEl) {
+        barEl.setAttribute('aria-valuenow', '0');
+        barEl.setAttribute('aria-valuemax', String(total));
+        barEl.setAttribute('aria-valuetext', 'Minted count unavailable');
+      }
+      return;
+    }
+    var pct = total > 0 ? Math.min(100, Math.max(0, (minted / total) * 100)) : 0;
+    mintedEl.textContent = String(Math.round(minted));
+    fillEl.style.width = pct + '%';
+    if (barEl) {
+      barEl.setAttribute('aria-valuenow', String(Math.round(minted)));
+      barEl.setAttribute('aria-valuemax', String(total));
+      barEl.setAttribute('aria-valuetext', Math.round(minted) + ' of ' + total + ' minted');
+    }
+  }
+
+  // ----- Collections embeds + Mutants mint progress (shared /api/collections) -----
   var grid = document.getElementById('collections-grid');
-  if (grid) {
+  var mutantsSection = document.getElementById('mutants');
+  if (grid || mutantsSection) {
     fetch(window.location.origin + '/api/collections', { credentials: 'include' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
-        if (!data || !data.collections || !data.collections.length) return;
-        grid.innerHTML = '';
-        data.collections.forEach(function (c) {
-          var card = document.createElement('div');
-          card.className = 'card card--nft card--embed';
-          var mainCollectionLogo = c.symbol === 'absurd_art_apes' ? 'assets/logo.png' : null;
-          var horizonsImg = c.symbol === 'absurd_horizons' ? 'assets/absurd-horizons.png' : null;
-          var mediaSrc = horizonsImg || mainCollectionLogo || c.animationUrl || c.image;
-          var mediaHtml = '';
-          if (mediaSrc) {
-            var isGif = !horizonsImg && !mainCollectionLogo && (/\.gif(\?|$)/i.test(mediaSrc) || (c.animationUrl && !c.image));
-            if (isGif) {
-              mediaHtml = '<div class="embed__media embed__media--video"><img src="' + escapeHtml(mediaSrc) + '" alt="" loading="lazy" /></div>';
-            } else {
-              mediaHtml = '<div class="embed__media"><img src="' + escapeHtml(mediaSrc) + '" alt="" loading="lazy" /></div>';
-            }
-          } else {
-            mediaHtml = '<div class="embed__media embed__media--placeholder" aria-hidden="true"></div>';
-          }
-          var desc = (c.description || '').slice(0, 280);
-          if ((c.description || '').length > 280) desc += '…';
-          var stats = [];
-          if (c.supply != null && Number(c.supply) > 1) stats.push({ label: 'Supply', value: formatNum(c.supply) });
-          if (c.listedCount != null) stats.push({ label: 'Listed', value: formatNum(c.listedCount) });
-          if (c.floorPriceSol != null) stats.push({ label: 'Floor', value: c.floorPriceSol + ' SOL' });
-          if (c.volumeAllSol != null) stats.push({ label: 'Volume', value: c.volumeAllSol + ' SOL' });
-          if (c.avgPrice24hrSol != null) stats.push({ label: '24h avg', value: c.avgPrice24hrSol + ' SOL' });
-          var statsHtml = stats.length ? '<div class="embed__stats">' + stats.map(function (s) {
-            return '<div class="embed__stat"><span class="embed__stat-label">' + escapeHtml(s.label) + '</span><span class="embed__stat-value">' + escapeHtml(s.value) + '</span></div>';
-          }).join('') + '</div>' : '';
-          var meUrl = c.marketplaceUrl || ('https://magiceden.io/marketplace/' + encodeURIComponent(c.symbol || ''));
-          var tensorUrl = c.tensorUrl || ('https://www.tensor.trade/trade/' + encodeURIComponent(c.symbol || ''));
-          var actionsHtml =
-            '<div class="collections__actions">' +
-            '<a href="' + escapeHtml(meUrl) + '" class="collections__btn" target="_blank" rel="noopener" aria-label="Trade on Magic Eden">' +
-              '<img src="assets/magic-eden.png" alt="Magic Eden" class="collections__btn-img collections__btn-img--me" loading="lazy" />' +
-            '</a>' +
-            '<a href="' + escapeHtml(tensorUrl) + '" class="collections__btn" target="_blank" rel="noopener" aria-label="Trade on Tensor">' +
-              '<img src="assets/tensor.png" alt="Tensor" class="collections__btn-img" loading="lazy" />' +
-            '</a>' +
-          '</div>';
-          card.innerHTML =
-            mediaHtml +
-            '<div class="embed__body">' +
-              '<h3 class="card__title">' + escapeHtml(c.name || c.symbol) + '</h3>' +
-              (desc ? '<p class="card__text">' + escapeHtml(desc) + '</p>' : '') +
-              statsHtml +
-              actionsHtml +
-            '</div>';
-          grid.appendChild(card);
-        });
-        var horizons = data.collections.find(function (c) { return c.symbol === 'absurd_horizons'; });
-        if (horizons) {
-          var supply = horizons.supply != null ? Number(horizons.supply) : 0;
-          var total = 4444;
-          var pct = total > 0 ? Math.min(100, (supply / total) * 100) : 0;
-          var labelEl = document.getElementById('horizons-mint-label');
-          var fillEl = document.getElementById('horizons-progress-fill');
-          var trackEl = document.querySelector('#horizons-mint-progress .horizons__progress-track');
-          if (labelEl) labelEl.textContent = (supply.toLocaleString()) + ' / ' + (total.toLocaleString()) + ' minted';
-          if (fillEl) fillEl.style.width = pct.toFixed(1) + '%';
-          if (trackEl) {
-            trackEl.setAttribute('aria-valuenow', String(Math.round(supply)));
-            trackEl.setAttribute('aria-valuemax', String(total));
+        var cols = data && data.collections ? data.collections : [];
+        if (grid) {
+          grid.innerHTML = '';
+          if (cols.length) {
+            cols.forEach(function (c) {
+              var card = document.createElement('div');
+              card.className = 'card card--nft card--embed';
+              var cardImages = CONFIG.collectionCardImages || {};
+              var overrideImg = c.symbol && cardImages[c.symbol] ? cardImages[c.symbol] : null;
+              var mediaSrc = overrideImg || c.animationUrl || c.image;
+              var mediaHtml = '';
+              if (mediaSrc) {
+                var isGif = !overrideImg && (/\.gif(\?|$)/i.test(mediaSrc) || (c.animationUrl && !c.image));
+                if (isGif) {
+                  mediaHtml = '<div class="embed__media embed__media--video"><img src="' + escapeHtml(mediaSrc) + '" alt="" loading="lazy" /></div>';
+                } else {
+                  mediaHtml = '<div class="embed__media"><img src="' + escapeHtml(mediaSrc) + '" alt="" loading="lazy" /></div>';
+                }
+              } else {
+                mediaHtml = '<div class="embed__media embed__media--placeholder" aria-hidden="true"></div>';
+              }
+              var stats = [];
+              if (c.supply != null && Number(c.supply) > 1) stats.push({ label: 'Supply', value: formatNum(c.supply) });
+              if (c.listedCount != null) stats.push({ label: 'Listed', value: formatNum(c.listedCount) });
+              if (c.floorPriceSol != null) stats.push({ label: 'Floor', value: c.floorPriceSol + ' SOL' });
+              if (c.volumeAllSol != null) stats.push({ label: 'Volume', value: c.volumeAllSol + ' SOL' });
+              if (c.avgPrice24hrSol != null) stats.push({ label: '24h avg', value: c.avgPrice24hrSol + ' SOL' });
+              var statsHtml = stats.length ? '<div class="embed__stats">' + stats.map(function (s) {
+                return '<div class="embed__stat"><span class="embed__stat-label">' + escapeHtml(s.label) + '</span><span class="embed__stat-value">' + escapeHtml(s.value) + '</span></div>';
+              }).join('') + '</div>' : '';
+              var meUrl = c.marketplaceUrl || ('https://magiceden.io/marketplace/' + encodeURIComponent(c.symbol || ''));
+              var tensorUrl = c.tensorUrl || ('https://www.tensor.trade/trade/' + encodeURIComponent(c.symbol || ''));
+              var actionsHtml =
+                '<div class="collections__actions">' +
+                '<a href="' + escapeHtml(meUrl) + '" class="collections__btn" target="_blank" rel="noopener" aria-label="Trade on Magic Eden">' +
+                  '<img src="assets/magic-eden.png" alt="Magic Eden" class="collections__btn-img collections__btn-img--me" loading="lazy" />' +
+                '</a>' +
+                '<a href="' + escapeHtml(tensorUrl) + '" class="collections__btn" target="_blank" rel="noopener" aria-label="Trade on Tensor">' +
+                  '<img src="assets/tensor.png" alt="Tensor" class="collections__btn-img" loading="lazy" />' +
+                '</a>' +
+                '</div>';
+              card.innerHTML =
+                mediaHtml +
+                '<div class="embed__body">' +
+                  '<h3 class="card__title">' + escapeHtml(c.name || c.symbol) + '</h3>' +
+                  statsHtml +
+                  actionsHtml +
+                '</div>';
+              grid.appendChild(card);
+            });
           }
         }
+        updateMutantsSectionFromCollections(cols);
       })
-      .catch(function () {});
+      .catch(function () {
+        updateMutantsSectionFromCollections([]);
+      });
   }
 
   function escapeHtml(s) {
@@ -1453,32 +1281,77 @@
     } catch (_) { return ''; }
   }
 
-  // ----- Team (from ABSURD_APES_CONFIG.team: image, name, role, xProfileUrl) -----
+  // ----- Team (config + Discord id → display name + avatar via /api/discord/public-users) -----
   var teamGrid = document.getElementById('team-grid');
-  if (teamGrid && window.ABSURD_APES_CONFIG && Array.isArray(window.ABSURD_APES_CONFIG.team) && window.ABSURD_APES_CONFIG.team.length > 0) {
-    var teamList = window.ABSURD_APES_CONFIG.team;
-    teamGrid.innerHTML = '';
-    teamList.forEach(function (member) {
-      var name = member.name || 'Team';
-      var image = member.image || '';
-      var role = member.role || '';
-      var xUrl = member.xProfileUrl || '';
-      var card = document.createElement('div');
-      card.className = 'card card--team';
-      var imgSrc = image ? image : 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>');
-      var handleDisplay = xHandleFromUrl(xUrl);
-      var xLine = xUrl && handleDisplay
-        ? '<p class="card__meta card__meta--handle"><a class="link link--external" href="' + escapeHtml(xUrl) + '" target="_blank" rel="noopener">' + escapeHtml(handleDisplay) + '</a></p>'
-        : '';
-      card.innerHTML =
-        '<div class="card__avatar-wrap">' +
-          '<img class="card__avatar card__avatar--img" src="' + escapeHtml(imgSrc) + '" alt="" loading="lazy" />' +
-        '</div>' +
-        '<h3 class="card__title">' + escapeHtml(name) + '</h3>' +
-        xLine +
-        (role ? '<p class="card__text card__text--role">' + escapeHtml(role) + '</p>' : '');
-      teamGrid.appendChild(card);
-    });
+  if (teamGrid && window.UGLY_APE_SQUAD_CONFIG && Array.isArray(window.UGLY_APE_SQUAD_CONFIG.team) && window.UGLY_APE_SQUAD_CONFIG.team.length > 0) {
+    var teamList = window.UGLY_APE_SQUAD_CONFIG.team;
+    var placeholderSvg =
+      'data:image/svg+xml,' +
+      encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>'
+      );
+    function renderTeamCards(discordById) {
+      discordById = discordById || {};
+      teamGrid.innerHTML = '';
+      teamList.forEach(function (member) {
+        var did = member.discordId != null ? String(member.discordId) : '';
+        var d = did && discordById[did];
+        var name = (d && d.displayName) ? d.displayName : member.name || 'Team';
+        var image = member.image || '';
+        var imgSrc =
+          (d && d.avatarUrl) ? d.avatarUrl : image ? image : placeholderSvg;
+        var role = member.role || '';
+        var xUrl = member.xProfileUrl || '';
+        var card = document.createElement('div');
+        card.className = 'card card--team';
+        var handleDisplay = xHandleFromUrl(xUrl);
+        var xLine =
+          xUrl && handleDisplay
+            ? '<p class="card__meta card__meta--handle"><a class="link link--external" href="' +
+              escapeHtml(xUrl) +
+              '" target="_blank" rel="noopener">' +
+              escapeHtml(handleDisplay) +
+              '</a></p>'
+            : '';
+        card.innerHTML =
+          '<div class="card__avatar-wrap">' +
+          '<img class="card__avatar card__avatar--img" src="' +
+          escapeHtml(imgSrc) +
+          '" alt="" loading="lazy" />' +
+          '</div>' +
+          '<h3 class="card__title">' +
+          escapeHtml(name) +
+          '</h3>' +
+          xLine +
+          (role ? '<p class="card__text card__text--role">' + escapeHtml(role) + '</p>' : '');
+        teamGrid.appendChild(card);
+      });
+    }
+    var teamDiscordIds = teamList
+      .map(function (m) {
+        return m.discordId != null ? String(m.discordId).trim() : '';
+      })
+      .filter(Boolean);
+    if (teamDiscordIds.length) {
+      fetch(window.location.origin + '/api/discord/public-users?ids=' + encodeURIComponent(teamDiscordIds.join(',')), {
+        credentials: 'include',
+      })
+        .then(function (r) {
+          return r.ok ? r.json() : { users: [] };
+        })
+        .then(function (data) {
+          var map = {};
+          (data.users || []).forEach(function (u) {
+            if (u && u.id) map[String(u.id)] = u;
+          });
+          renderTeamCards(map);
+        })
+        .catch(function () {
+          renderTeamCards({});
+        });
+    } else {
+      renderTeamCards({});
+    }
   }
 
   // ----- Holders table (with live $ value from /api/prices) -----
@@ -1493,7 +1366,6 @@
       if (n >= 0.01) return '$' + n.toFixed(2);
       return '$' + n.toFixed(4);
     }
-    var HOLDERS_AAA_BANK_WALLET = 'Ffpwo7q7Gtv85w3ZfhDSSz3DnnqboRnPDAW56de3ZqAP';
     var HOLDERS_ME_LISTINGS_WALLET = '1BWutmTvYPwDtmw9abTkS4Ssr8no61spGAvW1X6NDix';
 
     function loadHolders(sort) {
@@ -1512,13 +1384,12 @@
         var collectionsData = arr[2];
         var tokenUsd = prices.tokenUsd;
         var solUsd = prices.solUsd;
-        var floorAbsurdApesSol = null;
+        var floorCol1Sol = null;
         var floorCol2Sol = null;
         if (collectionsData && collectionsData.collections && Array.isArray(collectionsData.collections)) {
-          collectionsData.collections.forEach(function (c) {
-            if (c.symbol === 'absurd_art_apes' && c.floorPriceSol != null) floorAbsurdApesSol = parseFloat(String(c.floorPriceSol), 10);
-            if (c.symbol === 'absurd_horizons' && c.floorPriceSol != null) floorCol2Sol = parseFloat(String(c.floorPriceSol), 10);
-          });
+          var cols = collectionsData.collections;
+          if (cols[0] && cols[0].floorPriceSol != null) floorCol1Sol = parseFloat(String(cols[0].floorPriceSol), 10);
+          if (cols[1] && cols[1].floorPriceSol != null) floorCol2Sol = parseFloat(String(cols[1].floorPriceSol), 10);
         }
         var solUsdNum = solUsd != null ? Number(solUsd) : null;
         var tokenUsdNum = tokenUsd != null ? Number(tokenUsd) : null;
@@ -1528,21 +1399,30 @@
         }
         var list = data.holders.map(function (h) {
           var tokenBal = h.tokenBalance != null ? Number(h.tokenBalance) : null;
-          var absurdApesCount = Number(h.absurdApesCount) || 0;
+          var col1Count = Number(h.col1Count) || 0;
           var col2Count = Number(h.col2Count) || 0;
           var tokenValueUsd = (tokenUsdNum != null && !isNaN(tokenUsdNum) && tokenBal != null && !isNaN(tokenBal)) ? tokenBal * tokenUsdNum : null;
-          var nftValueAbsurdApes = (solUsdNum != null && !isNaN(solUsdNum) && floorAbsurdApesSol != null && !isNaN(floorAbsurdApesSol)) ? absurdApesCount * floorAbsurdApesSol * solUsdNum : null;
+          var nftValueCol1 = (solUsdNum != null && !isNaN(solUsdNum) && floorCol1Sol != null && !isNaN(floorCol1Sol)) ? col1Count * floorCol1Sol * solUsdNum : null;
           var nftValueCol2 = (solUsdNum != null && !isNaN(solUsdNum) && floorCol2Sol != null && !isNaN(floorCol2Sol)) ? col2Count * floorCol2Sol * solUsdNum : null;
           var nftValueUsd = null;
-          if (solUsdNum != null && !isNaN(solUsdNum) && (floorAbsurdApesSol != null || floorCol2Sol != null)) {
-            var nftSol = absurdApesCount * (floorAbsurdApesSol || 0) + col2Count * (floorCol2Sol || 0);
+          if (solUsdNum != null && !isNaN(solUsdNum) && (floorCol1Sol != null || floorCol2Sol != null)) {
+            var nftSol = col1Count * (floorCol1Sol || 0) + col2Count * (floorCol2Sol || 0);
             nftValueUsd = nftSol * solUsdNum;
           }
           var totalValueUsd = null;
           if (tokenValueUsd != null || nftValueUsd != null) {
             totalValueUsd = (tokenValueUsd != null ? tokenValueUsd : 0) + (nftValueUsd != null ? nftValueUsd : 0);
           }
-          return { h: h, tokenBal: tokenBal != null ? tokenBal : 0, totalValueUsd: totalValueUsd, nftValueAbsurdApes: nftValueAbsurdApes, nftValueCol2: nftValueCol2, absurdApesCount: absurdApesCount, col2Count: col2Count };
+          return {
+            h: h,
+            tokenBal: tokenBal != null ? tokenBal : 0,
+            tokenValueUsd: tokenValueUsd,
+            totalValueUsd: totalValueUsd,
+            nftValueCol1: nftValueCol1,
+            nftValueCol2: nftValueCol2,
+            col1Count: col1Count,
+            col2Count: col2Count,
+          };
         });
         if (sort === 'token') {
           list.sort(function (a, b) { return b.tokenBal - a.tokenBal; });
@@ -1555,14 +1435,14 @@
             if (vb >= 0) return 1;
             return b.col2Count - a.col2Count;
           });
-        } else if (sort === 'absurdApes') {
+        } else if (sort === 'col1') {
           list.sort(function (a, b) {
-            var va = a.nftValueAbsurdApes != null ? a.nftValueAbsurdApes : -1;
-            var vb = b.nftValueAbsurdApes != null ? b.nftValueAbsurdApes : -1;
+            var va = a.nftValueCol1 != null ? a.nftValueCol1 : -1;
+            var vb = b.nftValueCol1 != null ? b.nftValueCol1 : -1;
             if (va >= 0 && vb >= 0) return vb - va;
             if (va >= 0) return -1;
             if (vb >= 0) return 1;
-            return b.absurdApesCount - a.absurdApesCount;
+            return b.col1Count - a.col1Count;
           });
         } else {
           list.sort(function (a, b) {
@@ -1573,27 +1453,34 @@
         }
         var rows = list.map(function (item, i) {
           var h = item.h;
-          var valueUsd = sort === 'total' ? item.totalValueUsd : (sort === 'absurdApes' ? item.nftValueAbsurdApes : (sort === 'col2' ? item.nftValueCol2 : null));
+          var valueUsd =
+            sort === 'total'
+              ? item.totalValueUsd
+              : sort === 'token'
+                ? item.tokenValueUsd
+                : sort === 'col1'
+                  ? item.nftValueCol1
+                  : sort === 'col2'
+                    ? item.nftValueCol2
+                    : null;
           var valueCell = valueUsd != null ? formatUsd(valueUsd) : '—';
           var baseName = h.displayName || (h.wallet && h.wallet.length > 12 ? h.wallet.slice(0, 4) + '…' + h.wallet.slice(-4) : (h.wallet || '—'));
           var displayName = baseName + (h.walletCount > 1 ? ' (' + h.walletCount + ' wallets)' : '');
           var walletLink = h.wallet ? 'https://solscan.io/account/' + encodeURIComponent(h.wallet) : null;
           var walletLower = (h.wallet || '').toLowerCase();
-          var isAaaBank = walletLower === HOLDERS_AAA_BANK_WALLET.toLowerCase();
           var isMeListings = walletLower === HOLDERS_ME_LISTINGS_WALLET.toLowerCase();
           var nameClass = 'holders-wallet';
-          if (isAaaBank) nameClass += ' holders-wallet--special';
-          else if (isMeListings) nameClass += ' holders-wallet--special';
+          if (isMeListings) nameClass += ' holders-wallet--special';
           else if (h.discordId) nameClass += ' holders-wallet--discord';
-          var label = isAaaBank ? 'AAA Bank' : (isMeListings ? 'ME Listings' : displayName);
-          var nameCell = walletLink && !isAaaBank && !isMeListings
+          var label = isMeListings ? 'ME Listings' : displayName;
+          var nameCell = walletLink && !isMeListings
             ? '<a href="' + escapeHtml(walletLink) + '" target="_blank" rel="noopener" class="' + nameClass + '">' + escapeHtml(label) + '</a>'
             : '<span class="' + nameClass + '">' + escapeHtml(label) + '</span>';
           return '<tr>' +
             '<td>' + (i + 1) + '</td>' +
             '<td>' + nameCell + '</td>' +
             '<td data-col="token">' + escapeHtml(h.tokenBalanceFormatted || '0') + '</td>' +
-            '<td data-col="absurdApes">' + (h.absurdApesCount || 0) + '</td>' +
+            '<td data-col="col1">' + (h.col1Count || 0) + '</td>' +
             '<td data-col="col2">' + (h.col2Count || 0) + '</td>' +
             '<td>' + escapeHtml(valueCell) + '</td>' +
             '</tr>';
@@ -1636,6 +1523,20 @@
     return val < 0.0001 ? val.toExponential(2) : val.toFixed(6);
   }
 
+  /** Right-axis / crosshair labels for OHLC when USD price is sub-penny (Lightweight Charts defaults show 0.00). */
+  function formatChartPriceScale(val) {
+    if (val == null || isNaN(val)) return '';
+    var v = Number(val);
+    var a = Math.abs(v);
+    if (a >= 1) return v.toFixed(4);
+    if (a >= 0.01) return v.toFixed(6);
+    if (a >= 1e-12) {
+      var decimals = Math.min(14, Math.max(6, -Math.floor(Math.log10(a)) + 2));
+      return v.toFixed(decimals);
+    }
+    return v.toExponential(4);
+  }
+
   if (priceUsdEl || priceSolEl) {
     fetch(window.location.origin + '/api/prices', { credentials: 'include' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -1662,7 +1563,7 @@
         var items = (data && data.data && data.data.items) ? data.data.items : [];
         if (chartHintEl) chartHintEl.textContent = data && data.message ? data.message : '';
         if (items.length === 0) {
-          if (chartHintEl && !chartHintEl.textContent) chartHintEl.textContent = 'Add BIRDEYE_API_KEY and AAA_TOKEN_MINT in server .env to show 15m chart.';
+          if (chartHintEl && !chartHintEl.textContent) chartHintEl.textContent = 'Chart needs TOKEN_MINT (SPL mint) in server .env. Pool OHLC uses GeckoTerminal / Dex liquidity.';
           return;
         }
         var candlestickData = items.map(function (c) {
@@ -1684,6 +1585,11 @@
           rightPriceScale: { borderColor: '#2a2d38', scaleMargins: { top: 0.1, bottom: 0.2 } },
         });
         var candleSeries = chart.addCandlestickSeries({
+          priceFormat: {
+            type: 'custom',
+            minMove: 1e-15,
+            formatter: formatChartPriceScale,
+          },
           upColor: '#14f195',
           downColor: '#f87171',
           borderDownColor: '#f87171',

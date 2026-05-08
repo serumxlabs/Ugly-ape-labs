@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Absurd Apes — NFT &amp; Token on Solana</title>
+  <title>Ugly Ape Squad — NFT &amp; Token on Solana</title>
   <!-- Open Graph / Twitter Card: must use absolute URLs for og:image so link embeds show logo and description -->
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Absurd Apes" />
-  <meta property="og:title" content="Absurd Apes — NFT &amp; Token on Solana" />
-  <meta property="og:description" content="Official Absurd Apes site: NFT collections, AAA token, tokenomics, raffles, and Discord verification. Built on Solana." />
+  <meta property="og:site_name" content="Ugly Ape Squad" />
+  <meta property="og:title" content="Ugly Ape Squad — NFT &amp; Token on Solana" />
+  <meta property="og:description" content="Ugly Ape Squad on Solana: NFT collections, project token, and Discord verification." />
   <meta property="og:image" content="{{SITE_URL}}/assets/logo.png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
   <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:alt" content="Absurd Apes logo" />
+  <meta property="og:image:alt" content="Ugly Ape Squad logo" />
   <meta property="og:url" content="{{SITE_URL}}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Absurd Apes — NFT &amp; Token on Solana" />
-  <meta name="twitter:description" content="Official Absurd Apes site: NFT collections, AAA token, tokenomics, raffles, and Discord verification. Built on Solana." />
+  <meta name="twitter:title" content="Ugly Ape Squad — NFT &amp; Token on Solana" />
+  <meta name="twitter:description" content="Ugly Ape Squad on Solana: NFT collections, project token, and Discord verification." />
   <meta name="twitter:image" content="{{SITE_URL}}/assets/logo.png" />
-  <meta name="twitter:image:alt" content="Absurd Apes logo" />
+  <meta name="twitter:image:alt" content="Ugly Ape Squad logo" />
   <link rel="icon" href="/assets/logo.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=19" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css?v=30" />
 </head>
 <body>
   <!-- Header: title (left) + social links (right) -->
@@ -44,21 +44,17 @@
   <aside class="dashboard dashboard--side" id="dashboard-side" aria-label="Dashboard">
     <div class="dashboard__brand">
       <span class="dashboard__logo-wrap" aria-hidden="true"><img src="assets/logo.png" alt="" class="dashboard__logo-img" width="36" height="36" /></span>
-      <img class="dashboard__title-img" id="dashboard-title-img" src="/assets/logo-text.png" alt="Absurd Apes" width="200" height="100" />
+      <span class="dashboard__title" id="dashboard-title">U.A.S</span>
     </div>
     <nav class="dashboard__nav" aria-label="Main">
       <a href="#home" class="dashboard__link dashboard__link--active" data-route="home" data-section="home"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a>
-      <a href="#intro" class="dashboard__link" data-section="intro"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Intro</a>
       <a href="#collections" class="dashboard__link" data-section="collections"><span class="dashboard__icon dashboard__icon--logo dashboard__icon--gallery" aria-hidden="true"></span>Collections</a>
-      <a href="#horizons" class="dashboard__link" data-section="horizons"><span class="dashboard__icon dashboard__icon--horizons" aria-hidden="true"></span>Horizons</a>
-      <a href="#token" class="dashboard__link dashboard__link--hidden" data-section="token"><span class="dashboard__thumb dashboard__thumb--menu-icon" aria-hidden="true"></span><span data-config="token-label">Token</span></a>
+      <a href="#mutants" class="dashboard__link" data-section="mutants"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 9V7l2-3 2 3v2"/><path d="M8 9h8"/><path d="M9 9v10a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V9"/><path d="M7 15h10"/></svg></span>Mutants</a>
+      <a href="#token" class="dashboard__link" data-section="token"><span class="dashboard__thumb dashboard__thumb--menu-icon" aria-hidden="true"></span><span data-config="token-label">SERUMX</span></a>
       <a href="#holders" class="dashboard__link" data-section="holders"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M28 27.7H4v-28a4 4 0 0 0-4 4v24a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4Z"/><path d="M8 24V12h4v12H8zm8 0V8h4v16h-4zm8 0V4h4v20h-4z"/></svg></span>Holders</a>
       <a href="#utilities" class="dashboard__link" data-section="utilities"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5,20.5h0a2,2,0,0,1-2.83,0l-5.21-5.21A6.59,6.59,0,0,1,8,15.84a6.5,6.5,0,0,1-5-5.76,6.42,6.42,0,0,1,.65-3.47L8,11l2.5-.5L11,8,6.61,3.68A6.42,6.42,0,0,1,10.08,3a6.5,6.5,0,0,1,5.76,5,6.59,6.59,0,0,1-.55,4.42l5.21,5.21A2,2,0,0,1,20.5,20.5Z"/></svg></span>Utilities</a>
-      <a href="#x-spaces" class="dashboard__link" data-section="x-spaces"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>X spaces</a>
       <a href="#team" class="dashboard__link" data-section="team"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Team</a>
-      <a href="/raffles" class="dashboard__link" data-route="raffles" aria-current="false"><span class="dashboard__icon dashboard__icon--raffle" aria-hidden="true"></span>Raffles</a>
-      <a href="/merch-packs" class="dashboard__link" data-route="merch-packs" aria-current="false"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Merch packs</a>
-      <a href="https://slotto.gg/partner/absurd-apes" class="dashboard__link" target="_blank" rel="noopener"><span class="dashboard__icon dashboard__icon--slotto" aria-hidden="true"></span>Slotto.gg</a>
+      <a href="https://slotto.gg" class="dashboard__link" target="_blank" rel="noopener"><span class="dashboard__icon dashboard__icon--slotto" aria-hidden="true"></span>Slotto.gg</a>
       <a href="#partners" class="dashboard__link dashboard__link--hidden" data-section="partners"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 640 512" fill="none" stroke="currentColor" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"><path d="M519.2 127.9l-47.6-47.6A56.252 56.252 0 0 0 432 64H205.2c-14.8 0-29.1 5.9-39.6 16.3L118 127.9H0v255.7h64c17.6 0 31.8-14.2 31.9-31.7h9.1l84.6 76.4c30.9 25.1 73.8 25.7 105.6 3.8 12.5 10.8 26 15.9 41.1 15.9 18.2 0 35.3-7.4 48.8-24 22.1 8.7 48.2 2.6 64-16.8l26.2-32.3c5.6-6.9 9.1-14.8 10.9-23h57.9c.1 17.5 14.4 31.7 31.9 31.7h64V127.9H519.2zM48 351.6c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16c0 8.9-7.2 16-16 16zm390-6.9l-26.1 32.2c-2.8 3.4-7.8 4-11.3 1.2l-23.9-19.4-30 36.5c-6 7.3-15 4.8-18 2.4l-36.8-31.5-15.6 19.2c-13.9 17.1-39.2 19.7-55.3 6.6l-97.3-88H96V175.8h41.9l61.7-61.6c2-.8 3.7-1.5 5.7-2.3H262l-38.7 35.5c-29.4 26.9-31.1 72.3-4.4 101.3 14.8 16.2 61.2 41.2 101.5 4.4l8.2-7.5 108.2 87.8c3.4 2.8 3.9 7.9 1.2 11.3zm106-40.8h-69.2c-2.3-2.8-4.9-5.4-7.7-7.7l-102.7-83.4 12.5-11.4c6.5-6 7-16.1 1-22.6L367 167.1c-6-6.5-16.1-6.9-22.6-1l-55.2 50.6c-9.5 8.7-25.7 9.4-34.6 0-9.3-9.9-8.5-25.1 1.2-33.9l65.6-60.1c7.4-6.8 17-10.5 27-10.5l83.7-.2c2.1 0 4.1.8 5.5 2.3l61.7 61.6H544v128zm48 47.7c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16c0 8.9-7.2 16-16 16z"/></svg></span>Partners</a>
       <a href="#" class="dashboard__link dashboard__link--shop" target="_blank" rel="noopener" style="display:none;" data-config="shop-link"><span class="dashboard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M3 4h2l2.4 12h11.2l1.4-8H7.3"/></svg></span>Shop</a>
     </nav>
@@ -85,12 +81,12 @@
       <div class="holdings holdings--hidden" id="holdings-panel">
         <p class="holdings__label">Your holdings</p>
         <div class="holdings__row">
-          <span class="holdings__key" data-holdings-key="token">Token</span>
+          <span class="holdings__key" data-holdings-key="token">SERUMX</span>
           <span class="holdings__value" id="holdings-token">—</span>
         </div>
         <div class="holdings__row">
-          <span class="holdings__key" data-holdings-key="absurdApes">Absurd Apes</span>
-          <span class="holdings__value" id="holdings-absurdApes">—</span>
+          <span class="holdings__key" data-holdings-key="col1">Collection 1</span>
+          <span class="holdings__value" id="holdings-col1">—</span>
         </div>
         <div class="holdings__row">
           <span class="holdings__key" data-holdings-key="col2">Col2</span>
@@ -110,21 +106,17 @@
       <span class="dashboard-bottom__icon"><svg class="dashboard-bottom__svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
       <span class="dashboard-bottom__label">Home</span>
     </a>
-    <a href="#intro" class="dashboard-bottom__item" data-section="intro" aria-label="Intro">
-      <span class="dashboard-bottom__icon"><svg class="dashboard-bottom__svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
-      <span class="dashboard-bottom__label">Intro</span>
-    </a>
     <a href="#collections" class="dashboard-bottom__item" data-section="collections" aria-label="Collections">
       <span class="dashboard-bottom__icon dashboard-bottom__icon--logo dashboard-bottom__icon--gallery"></span>
       <span class="dashboard-bottom__label">Collections</span>
     </a>
-    <a href="#horizons" class="dashboard-bottom__item" data-section="horizons" aria-label="Horizons">
-      <span class="dashboard-bottom__icon dashboard-bottom__icon--horizons"></span>
-      <span class="dashboard-bottom__label">Horizons</span>
-    </a>
-    <a href="#token" class="dashboard-bottom__item dashboard-bottom__item--hidden" data-section="token" aria-label="Token">
+    <a href="#token" class="dashboard-bottom__item" data-section="token" aria-label="SERUMX">
       <span class="dashboard-bottom__thumb dashboard-bottom__thumb--menu-icon"></span>
-      <span class="dashboard-bottom__label" data-config="token-label">Token</span>
+      <span class="dashboard-bottom__label" data-config="token-label">SERUMX</span>
+    </a>
+    <a href="#holders" class="dashboard-bottom__item" data-section="holders" aria-label="Holders">
+      <span class="dashboard-bottom__icon"><svg class="dashboard-bottom__svg" viewBox="0 0 32 32" fill="currentColor"><path d="M28 27.7H4v-28a4 4 0 0 0-4 4v24a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4Z"/><path d="M8 24V12h4v12H8zm8 0V8h4v16h-4zm8 0V4h4v20h-4z"/></svg></span>
+      <span class="dashboard-bottom__label">Holders</span>
     </a>
     <button type="button" class="dashboard-bottom__item dashboard-bottom__item--more" id="btn-more-mobile" aria-label="More options">
       <span class="dashboard-bottom__icon">+</span>
@@ -141,13 +133,11 @@
         <button type="button" class="panel__close" id="btn-panel-close" aria-label="Close menu"><svg class="panel__close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <nav class="panel__nav">
+        <a href="#mutants" class="panel__link" data-section="mutants"><span class="panel__link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 9V7l2-3 2 3v2"/><path d="M8 9h8"/><path d="M9 9v10a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V9"/><path d="M7 15h10"/></svg></span>Mutants</a>
         <a href="#holders" class="panel__link" data-section="holders"><span class="panel__link-icon"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M28 27.7H4v-28a4 4 0 0 0-4 4v24a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4Z"/><path d="M8 24V12h4v12H8zm8 0V8h4v16h-4zm8 0V4h4v20h-4z"/></svg></span>Holders</a>
         <a href="#utilities" class="panel__link" data-section="utilities"><span class="panel__link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5,20.5h0a2,2,0,0,1-2.83,0l-5.21-5.21A6.59,6.59,0,0,1,8,15.84a6.5,6.5,0,0,1-5-5.76,6.42,6.42,0,0,1,.65-3.47L8,11l2.5-.5L11,8,6.61,3.68A6.42,6.42,0,0,1,10.08,3a6.5,6.5,0,0,1,5.76,5,6.59,6.59,0,0,1-.55,4.42l5.21,5.21A2,2,0,0,1,20.5,20.5Z"/></svg></span>Utilities</a>
-        <a href="#x-spaces" class="panel__link" data-section="x-spaces"><span class="panel__link-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>X spaces</a>
         <a href="#team" class="panel__link" data-section="team"><span class="panel__link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Team</a>
-        <a href="/raffles" class="panel__link" data-route="raffles"><span class="panel__link-icon panel__link-icon--raffle" aria-hidden="true"></span>Raffles</a>
-        <a href="/merch-packs" class="panel__link" data-route="merch-packs"><span class="panel__link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Merch packs</a>
-        <a href="https://slotto.gg/partner/absurd-apes" class="panel__link" target="_blank" rel="noopener"><span class="panel__link-icon panel__link-icon--slotto" aria-hidden="true"></span>Slotto.gg</a>
+        <a href="https://slotto.gg" class="panel__link" target="_blank" rel="noopener"><span class="panel__link-icon panel__link-icon--slotto" aria-hidden="true"></span>Slotto.gg</a>
         <a href="#partners" class="panel__link panel__link--hidden" data-section="partners"><span class="panel__link-icon"><svg viewBox="0 0 640 512" fill="none" stroke="currentColor" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"><path d="M519.2 127.9l-47.6-47.6A56.252 56.252 0 0 0 432 64H205.2c-14.8 0-29.1 5.9-39.6 16.3L118 127.9H0v255.7h64c17.6 0 31.8-14.2 31.9-31.7h9.1l84.6 76.4c30.9 25.1 73.8 25.7 105.6 3.8 12.5 10.8 26 15.9 41.1 15.9 18.2 0 35.3-7.4 48.8-24 22.1 8.7 48.2 2.6 64-16.8l26.2-32.3c5.6-6.9 9.1-14.8 10.9-23h57.9c.1 17.5 14.4 31.7 31.9 31.7h64V127.9H519.2zM48 351.6c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16c0 8.9-7.2 16-16 16zm390-6.9l-26.1 32.2c-2.8 3.4-7.8 4-11.3 1.2l-23.9-19.4-30 36.5c-6 7.3-15 4.8-18 2.4l-36.8-31.5-15.6 19.2c-13.9 17.1-39.2 19.7-55.3 6.6l-97.3-88H96V175.8h41.9l61.7-61.6c2-.8 3.7-1.5 5.7-2.3H262l-38.7 35.5c-29.4 26.9-31.1 72.3-4.4 101.3 14.8 16.2 61.2 41.2 101.5 4.4l8.2-7.5 108.2 87.8c3.4 2.8 3.9 7.9 1.2 11.3zm106-40.8h-69.2c-2.3-2.8-4.9-5.4-7.7-7.7l-102.7-83.4 12.5-11.4c6.5-6 7-16.1 1-22.6L367 167.1c-6-6.5-16.1-6.9-22.6-1l-55.2 50.6c-9.5 8.7-25.7 9.4-34.6 0-9.3-9.9-8.5-25.1 1.2-33.9l65.6-60.1c7.4-6.8 17-10.5 27-10.5l83.7-.2c2.1 0 4.1.8 5.5 2.3l61.7 61.6H544v128zm48 47.7c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16c0 8.9-7.2 16-16 16z"/></svg></span>Partners</a>
       </nav>
       <div class="panel__actions">
@@ -172,12 +162,12 @@
       <div class="holdings holdings--hidden" id="holdings-panel-mobile">
         <p class="holdings__label">Your holdings</p>
         <div class="holdings__row">
-          <span class="holdings__key" data-holdings-key="token">Token</span>
+          <span class="holdings__key" data-holdings-key="token">SERUMX</span>
           <span class="holdings__value" id="holdings-token-mobile">—</span>
         </div>
         <div class="holdings__row">
-          <span class="holdings__key" data-holdings-key="absurdApes">Absurd Apes</span>
-          <span class="holdings__value" id="holdings-absurdApes-mobile">—</span>
+          <span class="holdings__key" data-holdings-key="col1">Collection 1</span>
+          <span class="holdings__value" id="holdings-col1-mobile">—</span>
         </div>
         <div class="holdings__row">
           <span class="holdings__key" data-holdings-key="col2">Col2</span>
@@ -275,20 +265,21 @@
     <div class="main__content main__content--home" id="main-home">
     <section class="section section--hero hero-home" id="home">
       <div class="hero-home__bg" aria-hidden="true"></div>
-      <p class="hero-home__tagline" id="hero-tagline"></p>
-      <div class="hero-home__content" aria-hidden="true">
-        <div class="hero-home__content-inner"></div>
+      <div class="hero-home__top">
+        <p class="hero-home__title hero-home__title--brand" id="hero-section-title"><span id="hero-section-title-inner">Ugly Ape Squad</span></p>
+        <div class="hero-home__audio">
+          <audio id="hero-audio" preload="metadata" loop playsinline></audio>
+          <button type="button" class="hero-home__audio-btn" id="hero-audio-btn" aria-label="Play music" aria-pressed="false">
+            <svg class="hero-home__audio-icon hero-home__audio-icon--play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+            <svg class="hero-home__audio-icon hero-home__audio-icon--pause" viewBox="0 0 24 24" hidden aria-hidden="true"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <span class="hero-home__audio-label" id="hero-audio-label">Mutation on Deck</span>
+        </div>
       </div>
+      <p class="hero-home__tagline" id="hero-tagline"></p>
       <div class="hero-home__slotto" style="display:none;">
         <p class="hero-home__slotto-label">FEATURED ON SLOTTO.GG</p>
         <a href="#" target="_blank" rel="noopener" class="hero-home__slotto-btn" aria-label="SLOTTO.GG"></a>
-      </div>
-    </section>
-
-    <section class="section section--intro" id="intro">
-      <div class="container">
-        <h2 class="section__title" id="intro-title">Intro</h2>
-        <div class="intro__body" id="intro-body"></div>
       </div>
     </section>
 
@@ -302,45 +293,51 @@
       </div>
     </section>
 
-    <section class="section section--horizons horizons--arrow-at-top" id="horizons">
-      <div class="container">
-        <h2 class="section__title">Absurd Horizons</h2>
-        <div class="horizons__mint-progress" id="horizons-mint-progress">
-          <p class="horizons__mint-label" id="horizons-mint-label">— / 4,444 minted</p>
-          <div class="horizons__progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="4444" aria-label="Mint progress">
-            <div class="horizons__progress-fill" id="horizons-progress-fill"></div>
-          </div>
-          <div class="horizons__alpha" id="horizons-alpha">
-            <p class="horizons__alpha-line">🔥 ABSURD MINT ALPHA 🔥</p>
-            <p class="horizons__alpha-line">🎁 $40,000 in MINT PRIZES 🎁</p>
-            <div class="horizons__alpha-more">
-              <p class="horizons__alpha-body">In 2 years we've given away 5,000+ NFTs &amp; SOL prizes worth $65,000 👀</p>
-              <p class="horizons__alpha-body">NOW another $40K up for grabs including some huge NFTs</p>
-              <p class="horizons__alpha-body">Wheels, Discord raffles &amp; Absurd Games night!</p>
-              <p class="horizons__alpha-cta">Join us or miss out!</p>
+    <section class="section section--mutants" id="mutants">
+      <div class="container mutants__inner">
+        <h2 class="section__title mutants__title">Mutants</h2>
+        <p class="section__lead mutants__lead" id="mutants-section-lead">Evolve your ape — mint on Uni-fy.</p>
+        <div class="mutants__panel">
+          <div class="mutants__progress-block">
+            <div class="mutants__progress-head">
+              <span class="mutants__progress-label">Mint progress</span>
+              <span class="mutants__progress-count"><span id="mutants-minted">—</span><span class="mutants__progress-sep"> / </span><span id="mutants-total">2222</span></span>
             </div>
-            <button type="button" class="horizons__alpha-read-more link" id="horizons-alpha-read-more" aria-expanded="false">Read more</button>
+            <div
+              class="mutants__progress"
+              id="mutants-progress"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuenow="0"
+              aria-valuemax="2222"
+              aria-label="Mint progress"
+              aria-valuetext=""
+            >
+              <div class="mutants__progress-fill" id="mutants-progress-fill"></div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="horizons__right">
-        <span class="horizons__arrow" aria-hidden="true">
-          <svg viewBox="0 0 512.015 512.015" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M498.843,1.635c-7.979-3.328-17.152-1.472-23.253,4.629L256.006,225.848L36.422,6.264c-6.101-6.101-15.275-7.957-23.253-4.629C5.19,4.92,0.006,12.728,0.006,21.347v234.667c0,5.675,2.24,11.093,6.251,15.083l234.667,234.667c4.16,4.16,9.621,6.251,15.083,6.251c5.461,0,10.923-2.091,15.083-6.251l234.667-234.667c4.011-3.989,6.251-9.408,6.251-15.083V21.347C512.006,12.728,506.822,4.92,498.843,1.635z"/></svg>
-        </span>
-        <div class="horizons__cta">
-          <a href="https://launchmynft.io/sol/22520" class="horizons__mint btn btn--primary" target="_blank" rel="noopener noreferrer">Mint now</a>
+          <div class="mutants__cta">
+            <a href="https://launchpad.uni-fy.us/core-nft/mutantuglyape" class="btn btn--primary mutants__mint-btn" id="mutants-mint-btn" target="_blank" rel="noopener">Mint</a>
+            <p class="mutants__partner">
+              Mint powered by our partners at
+              <a href="https://uni-fy.us" class="mutants__partner-brand" target="_blank" rel="noopener">
+                <img src="assets/uni-fy-logo.png" alt="" class="mutants__partner-logo" width="28" height="28" loading="lazy" />
+                <span class="mutants__partner-name">Uni-fy.us</span>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--hidden" id="token">
+    <section class="section" id="token">
       <div class="container">
-        <h2 class="section__title"><img src="" alt="" class="section__thumb" width="32" height="32"> <span data-config="token-label">Token</span></h2>
-        <p class="section__lead">Project token on Solana.</p>
+        <h2 class="section__title"><img src="" alt="" class="section__thumb" width="32" height="32"> <span data-config="token-label">SERUMX</span></h2>
+        <p class="section__lead" id="token-section-lead">SERUMX on Solana.</p>
         <div class="card card--tokenomics">
           <div class="tokenomics__head">
             <div class="tokenomics__price-block">
-              <p class="tokenomics__price-label" id="tokenomics-price-label">Token (SYMBOL / USD)</p>
+              <p class="tokenomics__price-label" id="tokenomics-price-label">SERUMX / USD</p>
               <p class="tokenomics__price-main" id="tokenomics-price-usd">—</p>
               <p class="tokenomics__meta" id="tokenomics-meta">
                 <span class="tokenomics__change" id="tokenomics-change-24h">— 24H</span>
@@ -354,7 +351,7 @@
             <div class="tokenomics__metric"><span class="tokenomics__metric-label">24H volume</span><span class="tokenomics__metric-value" id="tokenomics-vol">—</span></div>
           </div>
           <div class="tokenomics__chart-wrap">
-            <p class="tokenomics__chart-label" id="tokenomics-chart-label">TOKEN / USD — 15m</p>
+            <p class="tokenomics__chart-label" id="tokenomics-chart-label">SERUMX / USD — 15m</p>
             <div class="tokenomics__chart" id="token-chart"></div>
             <p class="tokenomics__chart-hint" id="token-chart-hint"></p>
           </div>
@@ -362,9 +359,9 @@
             <p><strong>Network:</strong> Solana <img src="" alt="" class="tokenomics__solana-icon" id="tokenomics-solana-logo" width="20" height="20"></p>
             <p><strong>Token address:</strong> <code class="tokenomics__contract" id="tokenomics-contract"></code></p>
           </div>
-          <p class="card__text" id="tokenomics-summary-text">Project token. Verify holdings in the dashboard.</p>
+          <p class="card__text" id="tokenomics-summary-text">SERUMX — project token. Verify holdings in the dashboard.</p>
           <div class="tokenomics__actions">
-            <a href="#" class="btn btn--outline tokenomics__btn" id="tokenomics-dextools-link" target="_blank" rel="noopener"><img src="assets/dextools-logo.svg" alt="" class="tokenomics__btn-icon"> DEXTools →</a>
+            <a href="https://dexscreener.com/solana/75uh3cMvJ51o3Jx2AmmZohjVRDe4iiiZpb9n8h7CNr3i" class="btn btn--outline tokenomics__btn" id="tokenomics-dexscreener-link" target="_blank" rel="noopener" aria-label="Dexscreener"><img src="assets/dexscreener-logo.png" alt="" class="tokenomics__btn-icon tokenomics__btn-icon--dexscreener" width="20" height="20" loading="lazy" /> Dexscreener →</a>
             <a href="#" class="btn btn--outline tokenomics__btn" id="tokenomics-birdeye-link" target="_blank" rel="noopener"><img src="assets/birdeye-logo.png" alt="" class="tokenomics__btn-icon"> Birdeye →</a>
             <a href="#" class="btn btn--outline tokenomics__btn" id="tokenomics-solscan-link" target="_blank" rel="noopener"><img src="assets/solscan-logo.svg" alt="" class="tokenomics__btn-icon"> Solscan →</a>
           </div>
@@ -380,9 +377,9 @@
           <label class="holders-toolbar__label">View</label>
           <select class="holders-toolbar__select" id="holders-sort" aria-label="Holders view">
             <option value="total">Total</option>
-            <option value="token">Token</option>
-            <option value="absurdApes">Absurd Apes</option>
-            <option value="col2">Absurd Horizons</option>
+            <option value="token">SERUMX</option>
+            <option value="col1">Apes</option>
+            <option value="col2">Mutants</option>
           </select>
         </div>
         <div class="holders-wrap">
@@ -391,10 +388,10 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Wallet</th>
-                <th scope="col" data-col="token">Token</th>
-                <th scope="col" data-col="absurdApes">Absurd Apes</th>
-                <th scope="col" data-col="col2">Absurd Horizons</th>
-                <th scope="col">Value ($)</th>
+                <th scope="col" data-col="token">SERUMX</th>
+                <th scope="col" data-col="col1">Apes</th>
+                <th scope="col" data-col="col2">Mutants</th>
+                <th scope="col">Value</th>
               </tr>
             </thead>
             <tbody id="holders-tbody">
@@ -419,29 +416,12 @@
       </div>
     </section>
 
-    <section class="section" id="x-spaces">
-      <div class="container x-spaces__content">
-        <h2 class="section__title">X spaces</h2>
-        <p class="x-spaces__lead" id="x-spaces-lead">Tune in to our weekly X space...</p>
-        <div class="x-spaces__grid">
-          <div class="x-spaces__col x-spaces__col--image">
-            <img src="assets/spaces.png" alt="" class="x-spaces__card-img" loading="lazy" />
-          </div>
-          <div class="x-spaces__col x-spaces__col--text">
-            <p class="x-spaces__tagline" id="x-spaces-tagline">"Podcasting the most extraordinary minds, people and projects in Web3"</p>
-            <p class="x-spaces__time" id="x-spaces-time">Mondays<br>4-5pm EST</p>
-            <p class="x-spaces__hosts" id="x-spaces-hosts">Hosted by <a href="https://x.com/SkeetsANC" target="_blank" rel="noopener" class="x-spaces__link">@SkeetsANC</a> with co-host <a href="https://x.com/Cap_N_Chronic" target="_blank" rel="noopener" class="x-spaces__link">@Cap_N_Chronic</a></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section" id="team">
       <div class="container">
         <h2 class="section__title">Team</h2>
         <p class="section__lead">Core team and contributors.</p>
         <div class="grid grid--3" id="team-grid">
-          <!-- Filled by js from ABSURD_APES_CONFIG.team (image, name, role, xProfileUrl) -->
+          <!-- Filled by js from UGLY_APE_SQUAD_CONFIG.team (image, name, role, xProfileUrl) -->
         </div>
       </div>
     </section>
@@ -472,171 +452,6 @@
     </footer>
     </div>
 
-    <div class="main__content main__content--raffles" id="main-raffles" hidden>
-      <div class="raffles-page">
-        <div class="container">
-          <section class="raffles-admin" id="raffles-admin" hidden>
-            <h2 class="raffles-admin__title">Admin — Create raffle</h2>
-            <div class="raffles-admin__form">
-              <div class="raffles-admin__field">
-                <label class="raffles-admin__label">Prize NFT (from your wallet)</label>
-                <button type="button" class="btn btn--outline" id="raffles-select-nft">Select NFT</button>
-                <div class="raffles-admin__nft-preview" id="raffles-nft-preview" hidden>
-                  <div class="raffles-admin__nft-preview-img-wrap">
-                    <img id="raffles-nft-preview-img" src="" alt="" width="64" height="64" />
-                    <button type="button" class="raffles-admin__nft-preview-x" id="raffles-nft-remove" aria-label="Remove selected NFT">&times;</button>
-                  </div>
-                  <span id="raffles-nft-preview-name"></span>
-                </div>
-              </div>
-              <div class="raffles-admin__field">
-                <label class="raffles-admin__label" for="raffles-ticket-count">Number of tickets</label>
-                <input type="number" id="raffles-ticket-count" class="raffles-admin__input" min="1" value="50" />
-              </div>
-              <div class="raffles-admin__field">
-                <label class="raffles-admin__label">Payment token</label>
-                <select id="raffles-token-type" class="raffles-admin__select">
-                  <option value="sol">SOL</option>
-                  <option value="aaa">$AAA</option>
-                  <option value="custom">Other (paste mint)</option>
-                </select>
-                <div class="raffles-admin__custom-token" id="raffles-custom-token-wrap" hidden>
-                  <input type="text" id="raffles-custom-mint" class="raffles-admin__input" placeholder="Token mint address" />
-                  <span class="raffles-admin__token-info" id="raffles-custom-token-info"></span>
-                </div>
-                <label class="raffles-admin__label raffles-admin__label--mt" for="raffles-ticket-price">Ticket price</label>
-                <input type="number" id="raffles-ticket-price" class="raffles-admin__input" placeholder="e.g. 1 SOL, 100 AAA" min="0" step="any" />
-              </div>
-              <div class="raffles-admin__field">
-                <label class="raffles-admin__label" for="raffles-ends-at">End date & time</label>
-                <input type="datetime-local" id="raffles-ends-at" class="raffles-admin__input" />
-              </div>
-              <button type="button" class="btn btn--primary" id="raffles-start-btn">Start raffle</button>
-              <p class="raffles-admin__msg" id="raffles-admin-msg" hidden></p>
-            </div>
-          </section>
-
-          <section class="raffles-list" id="raffles-list">
-            <div class="raffles-list__grid" id="raffles-list-grid"></div>
-            <p class="raffles-list__empty" id="raffles-list-empty" hidden>No active raffles.</p>
-          </section>
-        </div>
-      </div>
-    </div>
-
-    <div class="main__content main__content--merch" id="main-merch" hidden>
-      <div class="merch-packs-page">
-        <div class="merch-packs-page__bg" id="merch-packs-bg" aria-hidden="true"></div>
-        <div class="merch-packs-page__scrim" aria-hidden="true"></div>
-        <div class="container merch-packs-page__inner">
-          <h2 class="merch-packs-page__title" id="merch-packs-title">Merch packs</h2>
-          <p class="merch-packs-page__lead" id="merch-packs-lead"></p>
-        </div>
-        <div class="merch-packs-page__cta" id="merch-packs-cta">
-          <button type="button" class="btn merch-packs-page__waitlist-btn" id="merch-waitlist-join-btn" disabled>Join wait list</button>
-          <p class="merch-packs-page__waitlist-hint" id="merch-waitlist-hint" hidden>Log in with Discord in the sidebar<br />to join the wait list.</p>
-          <button type="button" class="btn btn--outline merch-packs-page__admin-btn" id="merch-waitlist-admin-btn" hidden>View wait list</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Merch wait list: email modal -->
-    <div class="raffles-modal" id="merch-waitlist-modal" aria-hidden="true" role="dialog" aria-labelledby="merch-waitlist-modal-title" aria-modal="true">
-      <div class="raffles-modal__backdrop" id="merch-waitlist-modal-backdrop"></div>
-      <div class="raffles-modal__box">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="merch-waitlist-modal-title">Join merch wait list</h3>
-          <button type="button" class="raffles-modal__close" id="merch-waitlist-modal-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body">
-          <label class="merch-waitlist-modal__label" for="merch-waitlist-email">Email</label>
-          <input type="email" id="merch-waitlist-email" class="merch-waitlist-modal__input" placeholder="you@example.com" autocomplete="email" />
-          <p class="merch-waitlist-modal__err" id="merch-waitlist-modal-err" hidden></p>
-          <div class="merch-waitlist-modal__actions">
-            <button type="button" class="btn btn--outline" id="merch-waitlist-modal-cancel">Cancel</button>
-            <button type="button" class="btn btn--primary" id="merch-waitlist-modal-submit">Submit</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Merch wait list: admin list modal -->
-    <div class="raffles-modal" id="merch-waitlist-admin-modal" aria-hidden="true" role="dialog" aria-labelledby="merch-waitlist-admin-modal-title" aria-modal="true">
-      <div class="raffles-modal__backdrop" id="merch-waitlist-admin-modal-backdrop"></div>
-      <div class="raffles-modal__box raffles-modal__box--merch-admin">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="merch-waitlist-admin-modal-title">Merch wait list</h3>
-          <button type="button" class="raffles-modal__close" id="merch-waitlist-admin-modal-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body merch-waitlist-admin-modal__body">
-          <p class="raffles-modal__hint" id="merch-waitlist-admin-loading">Loading…</p>
-          <p class="raffles-modal__hint" id="merch-waitlist-admin-empty" hidden>No entries yet.</p>
-          <div class="merch-waitlist-admin-list" id="merch-waitlist-admin-list" hidden></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NFT picker modal (admin) -->
-    <div class="raffles-modal" id="raffles-nft-modal" aria-hidden="true" role="dialog" aria-labelledby="raffles-nft-modal-title">
-      <div class="raffles-modal__backdrop" id="raffles-nft-modal-backdrop"></div>
-      <div class="raffles-modal__box">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="raffles-nft-modal-title">Select prize NFT</h3>
-          <button type="button" class="raffles-modal__close" id="raffles-nft-modal-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body">
-          <p class="raffles-modal__hint" id="raffles-nft-modal-hint">Connect wallet to load NFTs.</p>
-          <div class="raffles-modal__nft-grid" id="raffles-nft-modal-grid"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Entries modal (public) -->
-    <div class="raffles-modal" id="raffles-entries-modal" aria-hidden="true" role="dialog" aria-labelledby="raffles-entries-modal-title">
-      <div class="raffles-modal__backdrop" id="raffles-entries-modal-backdrop"></div>
-      <div class="raffles-modal__box">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="raffles-entries-modal-title">Entries</h3>
-          <button type="button" class="raffles-modal__close" id="raffles-entries-modal-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body">
-          <div class="raffles-entries-list" id="raffles-entries-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Claim success / congratulations modal -->
-    <div class="raffles-modal raffles-claim-success-modal" id="raffles-claim-success-modal" aria-hidden="true" role="dialog" aria-labelledby="raffles-claim-success-title">
-      <div class="raffles-modal__backdrop" id="raffles-claim-success-backdrop"></div>
-      <div class="raffles-modal__box">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="raffles-claim-success-title">Congratulations!</h3>
-          <button type="button" class="raffles-modal__close" id="raffles-claim-success-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body">
-          <p class="raffles-claim-success__text">Your prize has been sent to your wallet.</p>
-          <a class="raffles-claim-success__link" id="raffles-claim-success-tx-link" href="#" target="_blank" rel="noopener noreferrer">View transaction</a>
-          <button type="button" class="btn btn--primary raffles-claim-success__btn" id="raffles-claim-success-done">Done</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ticket purchase success modal -->
-    <div class="raffles-modal raffles-purchase-success-modal" id="raffles-purchase-success-modal" aria-hidden="true" role="dialog" aria-labelledby="raffles-purchase-success-title">
-      <div class="raffles-modal__backdrop" id="raffles-purchase-success-backdrop"></div>
-      <div class="raffles-modal__box">
-        <div class="raffles-modal__head">
-          <h3 class="raffles-modal__title" id="raffles-purchase-success-title">Tickets purchased</h3>
-          <button type="button" class="raffles-modal__close" id="raffles-purchase-success-close" aria-label="Close">&times;</button>
-        </div>
-        <div class="raffles-modal__body">
-          <p class="raffles-purchase-success__text">Your ticket purchase was successful.</p>
-          <a class="raffles-purchase-success__link" id="raffles-purchase-success-tx-link" href="#" target="_blank" rel="noopener noreferrer">View transaction</a>
-          <button type="button" class="btn btn--primary raffles-purchase-success__btn" id="raffles-purchase-success-done">Done</button>
-        </div>
-      </div>
-    </div>
-
     <div class="main__spacer main__spacer--bottom" aria-hidden="true"></div>
   </main>
 
@@ -646,8 +461,6 @@
   </script>
   <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
   <script src="/js/config.js"></script>
-  <script src="/js/app.js?v=18"></script>
-  <script src="/js/raffles.js?v=16"></script>
-  <script src="/js/merch.js?v=5"></script>
+  <script src="/js/app.js?v=23"></script>
 </body>
 </html>

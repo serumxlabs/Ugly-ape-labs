@@ -1,147 +1,120 @@
 /**
- * Project config — Absurd Apes NFT & AAA token.
- * Edit values below for your deployment.
+ * Project config — Ugly Ape Squad (replace placeholders with live links, mints, and copy).
  */
-window.ABSURD_APES_CONFIG = {
+window.UGLY_APE_SQUAD_CONFIG = {
   // ——— Brand ———
-  projectName: 'Absurd Apes',
-  // ——— Embed (Open Graph / Twitter Cards) ———
-  siteUrl: 'https://absurd-apes.vercel.app',
-  siteTitle: 'Absurd Apes - NFT & Token',
-  siteDescription: 'Absurd Apes NFT collection and AAA token on Solana.',
+  projectName: 'Ugly Ape Squad',
+  dashboardTitle: 'U.A.S',
+  siteUrl: 'https://your-domain.vercel.app',
+  siteTitle: 'Ugly Ape Squad — NFT & Token',
+  siteDescription: 'Ugly Ape Squad on Solana — collections, token, holders, and community.',
   ogImageUrl: 'assets/logo.png',
-  tagline: 'ABSURD TOGETHER',
+  tagline: 'WE ARE UGLY',
   logoUrl: 'assets/logo.png',
-  dashboardTitleImage: 'assets/logo-text.png',
 
   // ——— Social ———
   social: {
-    x: 'https://x.com/absurdartapes',
-    discord: 'https://discord.gg/yFyErCkAyG',
+    x: 'https://x.com/uglyapesquad',
+    discord: '#',
   },
-  // Optional: shop URL (if set, Shop link is shown in sidebar)
   shopUrl: '',
 
   // ——— Token ———
   token: {
-    name: 'AAA',
-    symbol: 'AAA',
-    navLabel: 'AAA token',
+    name: 'SERUMX',
+    symbol: 'SERUMX',
+    navLabel: 'SERUMX',
     logoUrl: 'assets/logo.png',
     menuIconUrl: 'assets/coin-icon.svg',
-    priceLabel: 'AAA (AAA / USD)',
-    chartLabel: 'AAA / USD — 15m',
-    summaryText: 'Absurd Apes project token. Verify holdings in the dashboard.',
+    priceLabel: 'SERUMX / USD',
+    chartLabel: 'SERUMX / USD — 15m',
+    sectionLead: 'SERUMX on Solana.',
+    summaryText: 'SERUMX — project token. Verify holdings in the dashboard.',
   },
 
-  // ——— Hero ———
   hero: {
-    title: 'ABSURD APES',
+    title: 'Ugly Ape Squad',
     tagline: '',
     solanaLogoUrl: '/assets/solana-logo.svg',
     backgroundImage: 'assets/hero-bg.png',
+    musicSrc: 'assets/audio/mutation-on-deck-remastered.mp3',
+    musicLabel: 'Mutation on Deck',
   },
 
-  // ——— Intro (main story; linked below Home) ———
   intro: {
     title: 'Intro',
-    body: "<p>The Most Absurd Art you'll see in Web3</p><p>The Absurd brand was introduced over 2 years ago in March 2024 with our very first NFT Collection \"Absurd Art Apes\".</p><p>We started as an art project, raising awareness for artists and now we have multiple utilities including NFT staking earning $AAA token and Trait store for ultimate customisation both provided by GOTM Labs, we also have Raffles and much more.</p><p>We are just getting started with huge plans for brand expansion including our second NFT collection \"Absurd Horizons\" MINTING NOW, Absurd Reserve, token launch, Absurd Merch and the major step of bridging into Web2.</p><p>We Absurd, Expect Us.</p>",
+    body: '<p>Add your project story here.</p><p>Replace this copy in <code>js/config.js</code> with Ugly Ape Squad lore, roadmap highlights, and links.</p>',
   },
 
-  // ——— Merch packs page (/merch-packs) ———
-  merchPacks: {
-    headerTitle: 'ABSURD MERCH',
-    title: 'Merch packs',
-    lead: 'ABSURD merch dropping soon. Details and drops will be announced here and in Discord.',
-    backgroundImage: 'assets/merch-packs-bg.png',
-    backgroundImageMobile: 'assets/merch-packs-bg-mobile.png',
-  },
+  footerCopy: 'Ugly Ape Squad',
 
-  // ——— Footer ———
-  footerCopy: 'Absurd Apes',
-
-  // ——— Utilities ———
   utilitiesLead: 'Staking, partner utilities and external tools.',
-  utilities: [
-    {
-      id: 'gotm',
-      name: 'GOTM Labz',
-      description: 'Stake your NFTs and upgrade traits for Absurd Art Apes.',
-      links: [
-        { label: 'NFT Stake', url: 'https://www.gotmlabz.io/nftstake/absurdartapes' },
-        { label: 'Trait Store', url: 'https://www.gotmlabz.io/traitstore/absurdartapes' },
-      ],
-    },
-  ],
-  utilitiesComingSoon: [
-    {
-      name: 'Absurd Reserve',
-      image: 'assets/absurd-reserve.png',
-      description: 'Locked liquidity for peace of mind to holders 🔒\nCompounding for constant growth for the vault ✅',
-    },
-    {
-      name: 'Absurd Portals',
-      image: 'assets/absurd-portals.png',
-      description: "We're bringing the minting madness back - bigger, wilder, and more absurd than ever!\n\nHere's the deal:\nYour Apes are about to step through mysterious portals into an alternate dimension. On the other side? A brand-new Ape with a fresh set of traits with new artwork. Think of it as re-rolling the dice with a shot at landing hyper-rare traits that unlock massive staking benefits.\n\nAll 400+ OG traits will be in the mix, PLUS brand-new exclusive traits that deliver real utility:\n• 💧 Staking drip boosts\n• 💰 SOL & NFT bounties",
-      expandable: true,
-    },
-  ],
+  utilities: [],
 
-  // ——— Partners ———
-  partnersLead: 'Platforms and tools integrated with Absurd Apes.',
+  utilitiesComingSoon: [],
+
+  partnersLead: 'Platforms and tools integrated with Ugly Ape Squad.',
   partnersPlaceholder: 'Adding soon',
   partners: [],
 
-  // ——— Holders (labels; keys match server countKey: token, absurdApes, col2, totalNfts) ———
+  // Keys match server countKey names: token, col1, col2, totalNfts
   holdingsLabels: {
-    token: 'AAA',
-    absurdApes: 'Apes',
-    col2: 'Horizons',
+    token: 'SERUMX',
+    col1: 'Apes',
+    col2: 'Mutants',
     totalNfts: 'Total NFTs',
   },
-  holdersLead: 'Top holders by AAA token and NFT collections.',
+  holdersLead: 'Top holders by SERUMX and NFT collections.',
   holdersSortOptions: {
-    token: 'AAA token',
-    absurdApes: 'Absurd Art Apes NFTs',
-    col2: 'Absurd Horizons NFTs',
+    token: 'SERUMX',
+    col1: 'Apes',
+    col2: 'Mutants',
   },
 
-  // ——— Holder portal & API ———
   holderPortalUrl: '',
   endpoints: { holdings: '/api/holdings', discordAuth: '/api/discord/auth' },
   discordConnectUrl: '',
-  tokenMint: 'D6p61cpMVByNQyt6cwHQe5CLW6CTixRucp7cFUnD7BWz',
+  /** SPL mint for SERUMX (base token). Pair page uses liquidity pair address — different from mint. */
+  tokenMint: '64vQ6Km98vEZnz7a1MmgMjsaDYUL7RaLJCDmRiggBAGS',
+  /** Dexscreener pair page (liquidity pool url — keep for “Dexscreener →” button) */
+  tokenDexscreenerUrl: 'https://dexscreener.com/solana/75uh3cMvJ51o3Jx2AmmZohjVRDe4iiiZpb9n8h7CNr3i',
   tokenDextoolsPairUrl: '',
-  tokenBirdeyeUrl: 'https://birdeye.so/solana/token/D6p61cpMVByNQyt6cwHQe5CLW6CTixRucp7cFUnD7BWz',
+  tokenBirdeyeUrl: '',
+
+  // Magic Eden marketplace paths — set when collections are live (must match COLLECTION_*_ME_SLUG on the server)
   collections: {
-    absurd_art_apes: 'https://magiceden.io/marketplace/absurd_art_apes',
-    absurd_horizons: '#',
+    ugly_ape_squad: 'https://magiceden.io/marketplace/ugly_ape_squad',
+    mutant_ugly_ape_squad_collection: 'https://magiceden.io/marketplace/mutant_ugly_ape_squad_collection',
   },
 
-  // ——— Absurd Horizons (coming soon) ———
-  absurdHorizons: {
-    imageUrl: 'assets/absurd-horizons.png',
-    mintDate: '2026-03-01',
-    mintLabel: 'Minting Sunday 1st March',
+  /** Optional card images when ME/API image is missing; keys = collection ME slug */
+  collectionCardImages: {
+    ugly_ape_squad: 'assets/logo.png',
+    mutant_ugly_ape_squad_collection: 'assets/collections/mutant_ugly_ape_squad_collection.jpg',
   },
 
-  // ——— X spaces ———
-  xSpacesImageUrl: 'assets/spaces.png',
-  xSpacesLead: 'Tune in to our weekly X space...',
-  xSpacesTime: 'Mondays<br>4-5pm EST',
-  xSpacesHosts: [
-    { label: '@SkeetsANC', url: 'https://x.com/SkeetsANC' },
-    { label: '@Cap_N_Chronic', url: 'https://x.com/Cap_N_Chronic' },
-  ],
-  xSpacesTagline: 'Podcasting the most extraordinary minds, people and projects in Web3',
+  /** Mutants mint section: progress uses /api/collections supply for collectionSlug */
+  mutants: {
+    collectionSlug: 'mutant_ugly_ape_squad_collection',
+    totalSupply: 2222,
+    mintUrl: 'https://launchpad.uni-fy.us/core-nft/mutantuglyape',
+    partnerUrl: 'https://uni-fy.us',
+    partnerLogoUrl: 'assets/uni-fy-logo.png',
+    sectionLead: 'Evolve your ape — mint on Uni-fy.',
+  },
 
-  // ——— Team (image, name, role, xProfileUrl — no Discord fetch) ———
   team: [
-    { name: 'SkeetsANC', image: 'assets/team-skeets.png', role: 'Founder, Artist & Creative', xProfileUrl: 'https://x.com/SkeetsANC' },
-    { name: 'zippo5118', image: 'assets/team-zippo.png', role: 'Head MOD, Games Coordinator', xProfileUrl: 'https://x.com/Zippo1321' },
-    { name: 'capnchronic85', image: 'assets/team-capnchronic.png', role: 'MOD, Space Host', xProfileUrl: 'https://x.com/Cap_N_Chronic' },
-    { name: 'shaawtyanc', image: 'assets/team-shaawty.png', role: 'Project Assistant, Advisor', xProfileUrl: 'https://x.com/ShaawtyANC' },
-    { name: 'anonymous.__.', image: 'assets/team-anonymous.png', role: 'MOD, King Ding-a-ling', xProfileUrl: 'https://x.com/della_jonny' },
-    { name: 'Tom [SLOTTO]', image: 'assets/team-tom.png', role: 'Website developer', xProfileUrl: 'https://x.com/BUXDAO' },
+    {
+      name: 'Ugly Ape DAO',
+      role: 'Founder',
+      xProfileUrl: 'https://x.com/UglyapesDao',
+      discordId: '818256918769958912',
+    },
+    {
+      name: 'feedle',
+      role: 'Co-founder',
+      xProfileUrl: 'https://x.com/feedle_',
+      discordId: '693534548746829895',
+    },
   ],
 };

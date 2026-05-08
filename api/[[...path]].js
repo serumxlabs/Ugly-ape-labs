@@ -69,8 +69,8 @@ module.exports = (req, res) => {
   let u = raw;
   if (u.startsWith('/api/')) u = u.slice(4) || '/';
   else if (u === '/api') u = '/';
-  if (u === '/absurd-apes' || u === '/absurd-apes/') u = '/';
-  else if (u.startsWith('/absurd-apes/')) u = u.slice(13) || '/';
+  if (u === '/ugly-ape-squad' || u === '/ugly-ape-squad/') u = '/';
+  else if (u.startsWith('/ugly-ape-squad/')) u = u.slice(16) || '/';
   u = (u || '/').trim().replace(/\/+/g, '/').replace(/\/$/, '') || '/';
 
   if (u === '/favicon.ico') return res.status(204).end();
