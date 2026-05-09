@@ -55,12 +55,15 @@ module.exports = (req, res) => {
     const restNorm = (rest || '').replace(/^\/+|\/+$/, '');
     raw = '/api/' + (restNorm ? restNorm.replace(/^\/+/, '') : '');
   }
-  if (/^\/(discord|verify|collections|holders|prices|token-ohlc|wallets|raffles|wait-list|nfts|proxy-image|solana-rpc|token-info)(\/|$|\?)/.test(raw)) {
+  if (/^\/(discord|verify|collections|holders|prices|token-ohlc|wallets|raffles|wait-list|nfts|proxy-image|solana-rpc|token-info)(\/[^?]*)?$/.test(raw)) {
     raw = '/api' + raw;
   }
   const q = (req.url || '').includes('?') ? '?' + (req.url || '').split('?').slice(1).join('?') : '';
 
-  const isApiRoute = /^\/api\/(discord|verify|collections|holders|prices|token-ohlc|wallets|raffles|wait-list|nfts|proxy-image|solana-rpc|token-info)(\/|$|\?)/.test(raw);
+  // Path may be /api/discord/public-users?ids= — not only /api/discord (first segment + subpaths)
+  const isApiRoute = /^\/api\/(discord|verify|collections|holders|prices|token-ohlc|wallets|raffles|wait-list|nfts|proxy-image|solana-rpc|token-info)(\/[^?]*)?(\?.*)?$/.test(
+    raw
+  );
   if (isApiRoute) {
     req.url = raw + q;
     return app(req, res);
