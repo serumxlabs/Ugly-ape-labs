@@ -1337,9 +1337,18 @@
         credentials: 'include',
       })
         .then(function (r) {
-          return r.ok ? r.json() : { users: [] };
+          if (!r.ok) {
+            console.warn('[Team] /api/discord/public-users failed:', r.status, r.statusText);
+            return { users: [], configured: null };
+          }
+          return r.json();
         })
         .then(function (data) {
+          if (data && data.configured === false) {
+            console.warn(
+              '[Team] Discord avatars need DISCORD_BOT_TOKEN on the server. Add it in Vercel → Project → Settings → Environment Variables (same token as local .env).'
+            );
+          }
           var map = {};
           (data.users || []).forEach(function (u) {
             if (u && u.id) map[String(u.id)] = u;

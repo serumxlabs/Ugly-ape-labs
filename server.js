@@ -185,6 +185,8 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
 app.use(function requireProductionSessionSecret(req, res, next) {
   if (process.env.NODE_ENV !== 'production') return next();
   if (SESSION_SECRET !== DEFAULT_SESSION_SECRET) return next();
+  /** Stateless JSON used for Team avatars — allow through so previews work even if SESSION_SECRET is unset (cookies remain unsafe until fixed). */
+  if ((req.path || '').replace(/\/+$/, '') === '/api/discord/public-users') return next();
   console.error('Production misconfigured: set SESSION_SECRET in environment (Vercel Project Settings).');
   res.status(503).type('text/plain').send('Server misconfigured: set SESSION_SECRET');
 });
