@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "framework": null,
+  "installCommand": "npm install --no-audit --no-fund",
   "buildCommand": "npm run vercel-build",
   "rewrites": [
     { "source": "/favicon.ico", "destination": "/api/favicon" },
