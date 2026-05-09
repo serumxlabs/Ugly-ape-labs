@@ -22,10 +22,7 @@ const PORT = process.env.PORT || 3000;
 
 const DEFAULT_SESSION_SECRET = 'ugly-ape-squad-session-secret-change-in-production';
 const SESSION_SECRET = process.env.SESSION_SECRET || DEFAULT_SESSION_SECRET;
-if (process.env.NODE_ENV === 'production' && SESSION_SECRET === DEFAULT_SESSION_SECRET) {
-  console.error('Fatal: Set a strong, unique SESSION_SECRET in production. Do not use the default.');
-  process.exit(1);
-}
+/** Do not process.exit() here: Vercel runs `vercel build` with NODE_ENV=production and imports this file before env is guaranteed — that killed the build with no visible logs. Invalid prod config is rejected on each request below instead. */
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -184,6 +181,13 @@ function isValidSolanaAddress(s) {
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
   console.warn('Missing DISCORD_CLIENT_ID or DISCORD_CLIENT_SECRET. Set them in .env to enable Discord login.');
 }
+
+app.use(function requireProductionSessionSecret(req, res, next) {
+  if (process.env.NODE_ENV !== 'production') return next();
+  if (SESSION_SECRET !== DEFAULT_SESSION_SECRET) return next();
+  console.error('Production misconfigured: set SESSION_SECRET in environment (Vercel Project Settings).');
+  res.status(503).type('text/plain').send('Server misconfigured: set SESSION_SECRET');
+});
 
 app.use(cookieParser());
 app.use(
