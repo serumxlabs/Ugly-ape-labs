@@ -2057,7 +2057,8 @@ app.get('/api/holders', async function (req, res) {
         const totalNfts = totalNftsFromHolder(h);
         byDiscord.set(key, {
           displayName: dId ? (discordNames.get(dId) || 'Discord user') : h.wallet.slice(0, 4) + '…' + h.wallet.slice(-4),
-          wallet: dId ? null : h.wallet,
+          /** First wallet in merge order — Solscan link; aggregated balances include all linked wallets. */
+          wallet: h.wallet,
           discordId: dId || null,
           walletCount: 1,
           tokenBalance: h.tokenBalance,

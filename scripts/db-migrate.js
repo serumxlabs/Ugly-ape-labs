@@ -5,6 +5,7 @@
  */
 require('dotenv').config();
 const { Client } = require('pg');
+const { normalizeDatabaseUrl } = require('../db');
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS users (
@@ -71,15 +72,12 @@ ALTER TABLE raffles ADD COLUMN IF NOT EXISTS claim_tx_signature TEXT;
 `;
 
 async function run() {
-  let url = process.env.DATABASE_URL;
+  let url = normalizeDatabaseUrl(process.env.DATABASE_URL);
   if (!url) {
     console.error('DATABASE_URL not set. Add it to .env');
     process.exit(1);
   }
-  // Use verify-full to avoid pg SSL deprecation warning
-  if (url.includes('sslmode=require') || url.includes('sslmode=prefer') || url.includes('sslmode=verify-ca')) {
-    url = url.replace(/sslmode=(require|prefer|verify-ca)/i, 'sslmode=verify-full');
-  }
+  // Use verify-full to avoid pg SSL deprecation warning (handled in normalizeDatabaseUrl)
   const client = new Client({ connectionString: url });
   try {
     await client.connect();

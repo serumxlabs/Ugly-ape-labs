@@ -7,14 +7,31 @@ const crypto = require('crypto');
 
 let pool = null;
 
+/** Neon / Postgres: strip channel_binding (node-pg issues); normalize sslmode for pg. */
+function normalizeDatabaseUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.delete('channel_binding');
+    let out = u.toString();
+    if (/sslmode=(require|prefer|verify-ca)/i.test(out)) {
+      out = out.replace(/sslmode=(require|prefer|verify-ca)/i, 'sslmode=verify-full');
+    }
+    return out;
+  } catch (_) {
+    let s = url.replace(/[&?]channel_binding=[^&]*/gi, '');
+    s = s.replace(/\?&/g, '?').replace(/[?&]$/g, '');
+    if (s.includes('sslmode=require') || s.includes('sslmode=prefer') || s.includes('sslmode=verify-ca')) {
+      s = s.replace(/sslmode=(require|prefer|verify-ca)/i, 'sslmode=verify-full');
+    }
+    return s;
+  }
+}
+
 function getPool() {
   if (!pool) {
-    let url = process.env.DATABASE_URL;
+    let url = normalizeDatabaseUrl(process.env.DATABASE_URL);
     if (!url) return null;
-    // Avoid pg SSL warning: prefer verify-full (or leave as-is if already set)
-    if (url.includes('sslmode=require') || url.includes('sslmode=prefer') || url.includes('sslmode=verify-ca')) {
-      url = url.replace(/sslmode=(require|prefer|verify-ca)/i, 'sslmode=verify-full');
-    }
     pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: true } });
   }
   return pool;
@@ -417,6 +434,7 @@ async function getAllWaitList() {
 
 module.exports = {
   getPool,
+  normalizeDatabaseUrl,
   upsertUser,
   linkWallet,
   unlinkWallet,
