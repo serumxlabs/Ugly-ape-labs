@@ -1780,7 +1780,7 @@ body.holdings-verified #btn-verify-panel {
 
 .holdings {
   margin-top: 1rem;
-  padding: 0.75rem;
+  padding: 0.6rem 0.65rem;
   background: var(--bg-card);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
@@ -1792,25 +1792,27 @@ body.holdings-verified #btn-verify-panel {
   display: block;
 }
 .holdings__label {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: var(--text-muted);
 }
 .holdings__row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.35rem 0;
-  font-size: 1.0625rem;
+  padding: 0.2rem 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
 }
 .holdings__key {
   color: var(--text-muted);
 }
 .holdings__value {
   font-family: var(--font-mono);
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--success);
 }
