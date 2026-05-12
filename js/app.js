@@ -301,21 +301,27 @@
   if (mainHome) mainHome.hidden = false;
   document.body.classList.add('route-home');
 
-  (function initHeroReadMore() {
+  (function initHeroReadMoreModal() {
     var toggle = document.getElementById('hero-home-readmore-toggle');
-    var panel = document.getElementById('hero-home-readmore-panel');
-    if (!toggle || !panel) return;
-    toggle.addEventListener('click', function () {
-      var expanded = toggle.getAttribute('aria-expanded') === 'true';
-      if (expanded) {
-        panel.hidden = true;
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = 'Read more';
-      } else {
-        panel.hidden = false;
-        toggle.setAttribute('aria-expanded', 'true');
-        toggle.textContent = 'Read less';
-      }
+    var modal = document.getElementById('hero-readmore-modal');
+    var backdrop = document.getElementById('hero-readmore-modal-backdrop');
+    var closeBtn = document.getElementById('hero-readmore-modal-close');
+    if (!toggle || !modal) return;
+    function openReadmoreModal() {
+      modal.setAttribute('aria-hidden', 'false');
+      if (closeBtn) closeBtn.focus();
+    }
+    function closeReadmoreModal() {
+      modal.setAttribute('aria-hidden', 'true');
+      toggle.focus();
+    }
+    toggle.addEventListener('click', openReadmoreModal);
+    if (backdrop) backdrop.addEventListener('click', closeReadmoreModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeReadmoreModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (modal.getAttribute('aria-hidden') !== 'false') return;
+      closeReadmoreModal();
     });
   })();
 

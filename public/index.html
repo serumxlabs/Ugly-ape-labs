@@ -261,6 +261,56 @@
     </div>
   </div>
 
+  <!-- Hero: U.A.S Labs details (modal) -->
+  <div class="verify-modal hero-readmore-modal" id="hero-readmore-modal" aria-hidden="true" role="dialog" aria-labelledby="hero-readmore-modal-title" aria-modal="true">
+    <div class="verify-modal__backdrop" id="hero-readmore-modal-backdrop"></div>
+    <div class="verify-modal__box hero-readmore-modal__box">
+      <div class="verify-modal__head">
+        <h2 class="verify-modal__title" id="hero-readmore-modal-title">U.A.S Labs</h2>
+        <button type="button" class="verify-modal__close" id="hero-readmore-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="verify-modal__body hero-readmore-modal__body">
+        <ul class="hero-home__readmore-list">
+          <li class="hero-home__readmore-item">
+            <span class="hero-home__readmore-emoji" aria-hidden="true">🧪</span>
+            <div class="hero-home__readmore-copy">
+              <strong class="hero-home__readmore-title">SerumX Research</strong>
+              <p class="hero-home__readmore-desc">Experimental mutation compound powering the U.A.S ecosystem.</p>
+            </div>
+          </li>
+          <li class="hero-home__readmore-item">
+            <span class="hero-home__readmore-emoji" aria-hidden="true">🦠</span>
+            <div class="hero-home__readmore-copy">
+              <strong class="hero-home__readmore-title">Mutation Protocols</strong>
+              <p class="hero-home__readmore-desc">Transform apes through evolving mutant development systems.</p>
+            </div>
+          </li>
+          <li class="hero-home__readmore-item">
+            <span class="hero-home__readmore-emoji" aria-hidden="true">🎮</span>
+            <div class="hero-home__readmore-copy">
+              <strong class="hero-home__readmore-title">Lab Utilities</strong>
+              <p class="hero-home__readmore-desc">Games, raids, staking, loot boxes, and interactive ecosystem rewards.</p>
+            </div>
+          </li>
+          <li class="hero-home__readmore-item">
+            <span class="hero-home__readmore-emoji" aria-hidden="true">🔬</span>
+            <div class="hero-home__readmore-copy">
+              <strong class="hero-home__readmore-title">Trait Engineering</strong>
+              <p class="hero-home__readmore-desc">Advanced cosmetic mutation technology developed with the lab network.</p>
+            </div>
+          </li>
+          <li class="hero-home__readmore-item">
+            <span class="hero-home__readmore-emoji" aria-hidden="true">⚠️</span>
+            <div class="hero-home__readmore-copy">
+              <strong class="hero-home__readmore-title">Containment Status</strong>
+              <p class="hero-home__readmore-desc">The mutation continues to spread across the network.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <main class="main" id="main">
     <div class="main__spacer main__spacer--side" aria-hidden="true"></div>
 
@@ -282,50 +332,11 @@
           type="button"
           class="hero-home__readmore-toggle"
           id="hero-home-readmore-toggle"
-          aria-expanded="false"
-          aria-controls="hero-home-readmore-panel"
+          aria-haspopup="dialog"
+          aria-controls="hero-readmore-modal"
         >
           Read more
         </button>
-        <div class="hero-home__readmore-panel" id="hero-home-readmore-panel" hidden>
-          <ul class="hero-home__readmore-list">
-            <li class="hero-home__readmore-item">
-              <span class="hero-home__readmore-emoji" aria-hidden="true">🧪</span>
-              <div class="hero-home__readmore-copy">
-                <strong class="hero-home__readmore-title">SerumX Research</strong>
-                <p class="hero-home__readmore-desc">Experimental mutation compound powering the U.A.S ecosystem.</p>
-              </div>
-            </li>
-            <li class="hero-home__readmore-item">
-              <span class="hero-home__readmore-emoji" aria-hidden="true">🦠</span>
-              <div class="hero-home__readmore-copy">
-                <strong class="hero-home__readmore-title">Mutation Protocols</strong>
-                <p class="hero-home__readmore-desc">Transform apes through evolving mutant development systems.</p>
-              </div>
-            </li>
-            <li class="hero-home__readmore-item">
-              <span class="hero-home__readmore-emoji" aria-hidden="true">🎮</span>
-              <div class="hero-home__readmore-copy">
-                <strong class="hero-home__readmore-title">Lab Utilities</strong>
-                <p class="hero-home__readmore-desc">Games, raids, staking, loot boxes, and interactive ecosystem rewards.</p>
-              </div>
-            </li>
-            <li class="hero-home__readmore-item">
-              <span class="hero-home__readmore-emoji" aria-hidden="true">🔬</span>
-              <div class="hero-home__readmore-copy">
-                <strong class="hero-home__readmore-title">Trait Engineering</strong>
-                <p class="hero-home__readmore-desc">Advanced cosmetic mutation technology developed with the lab network.</p>
-              </div>
-            </li>
-            <li class="hero-home__readmore-item">
-              <span class="hero-home__readmore-emoji" aria-hidden="true">⚠️</span>
-              <div class="hero-home__readmore-copy">
-                <strong class="hero-home__readmore-title">Containment Status</strong>
-                <p class="hero-home__readmore-desc">The mutation continues to spread across the network.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
       </div>
       <div class="hero-home__slotto" style="display:none;">
         <p class="hero-home__slotto-label">FEATURED ON SLOTTO.GG</p>
