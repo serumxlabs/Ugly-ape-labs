@@ -246,7 +246,7 @@
 
   (function normalizeLegacyPaths() {
     var p = (window.location.pathname || '').replace(/\/$/, '') || '/';
-    if (p === '/raffles' || p === '/merch-packs') {
+    if (p === '/merch-packs') {
       history.replaceState(null, '', '/' + (window.location.hash || ''));
     }
     if (window.location.hash === '#intro') {

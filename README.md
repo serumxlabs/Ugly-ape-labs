@@ -1,6 +1,6 @@
 # Ugly Ape Squad — NFT & Token site
 
-Solana project site: collections, project token, holders, team, Discord login, verify holdings, and raffles.
+Solana project site: collections, project token, holders, team, Discord login, and verify holdings.
 
 ## Quick start
 
@@ -23,7 +23,7 @@ Open `http://localhost:3000`.
 2. **OAuth2 → Redirects**: add `http://localhost:3000/api/discord/callback` (local) and **every production host** you use, e.g. `https://www.yourdomain.com/api/discord/callback` **and** `https://your-app.vercel.app/api/discord/callback`. The server sets `redirect_uri` from the incoming request so users return on the same domain they started on (custom domain vs Vercel URL).
 3. Copy **Application ID** → `DISCORD_CLIENT_ID`, and **Client Secret** → `DISCORD_CLIENT_SECRET` in `.env`.
 4. For **Team** section avatars: same app → **Bot** → create/reset token → `DISCORD_BOT_TOKEN` in `.env`.
-5. For **raffle announcements** (bot posts new raffles and winners to a channel): see [docs/DISCORD-BOT-INVITE.md](docs/DISCORD-BOT-INVITE.md). Invite the bot with `https://discord.com/api/oauth2/authorize?client_id=YOUR_APPLICATION_ID&permissions=2048&scope=bot`, then set `DISCORD_RAFFLE_CHANNEL_ID` to the channel ID.
+5. Optional: invite a **Discord bot** into a server you control for future channel automations — see [docs/DISCORD-BOT-INVITE.md](docs/DISCORD-BOT-INVITE.md) and `/discord-bot-invite.html?client_id=...`.
 
 ## Database (Neon PostgreSQL)
 
@@ -31,7 +31,7 @@ Used for: saving Discord logins, linking wallets to Discord (via Verify), Pairs 
 
 1. Create a database at [Neon](https://neon.tech) (or any PostgreSQL).
 2. In **`.env`** set `DATABASE_URL=postgresql://user:pass@host/db?sslmode=require`.
-3. Run the migration once: `npm run db:migrate` (creates `users`, `wallets`, `pairs_state`, `pairs_buys`).
+3. Run the migration once: `npm run db:migrate` (creates `users` and `wallets`).
 4. In production (e.g. Vercel), add the same `DATABASE_URL` to environment variables. Run `npm run db:migrate` locally against that URL once, or use Neon’s SQL editor to run the schema from `scripts/db-migrate.js`.
 
 After this, Discord logins are stored in `users`, and when a user **Verify**s (Discord + wallet), the wallet is linked in `wallets`. The holders table then shows Discord names for linked holders and aggregates all wallets with the same Discord ID into one entry.
@@ -41,11 +41,10 @@ After this, Discord logins are stored in `users`, and when a user **Verify**s (D
 1. **Push** this repo to GitHub and [import it in Vercel](https://vercel.com) as a new project.
 2. **Framework**: Other. **Root Directory**: leave default.
 3. **Environment Variables** (Vercel → Project → Settings → Environment Variables). Add the same as `.env`:
-   - **Required for Discord + raffles**: `SESSION_SECRET`, `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DATABASE_URL`
-   - **Optional**: `BASE_URL` or `SITE_URL` (e.g. `https://your-app.vercel.app` for OG meta), `HELIUS_API_KEY`, `TOKEN_MINT`, `TOKEN_SYMBOL`, `DISCORD_BOT_TOKEN`, `BIRDEYE_API_KEY`, collection mints / Magic Eden slugs
-   - **Raffles**: `ADMIN_DISCORD_IDS` (comma-separated Discord user IDs for raffle admins), `PRIZE_WALLET` (Solana address for prize NFTs), `RAFFLE_TREASURY_WALLET` (where ticket payments go; defaults to `PRIZE_WALLET` if unset)
+   - **Required for Discord + database features**: `SESSION_SECRET`, `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DATABASE_URL`
+   - **Optional**: `BASE_URL` or `SITE_URL` (e.g. `https://your-app.vercel.app` for OG meta), `HELIUS_API_KEY`, `TOKEN_MINT`, `TOKEN_SYMBOL`, `DISCORD_BOT_TOKEN`, `BIRDEYE_API_KEY`, collection mints / Magic Eden slugs, `ADMIN_DISCORD_IDS` (merch wait list export)
 4. **Discord redirect**: Same as local setup — whitelist **each** callback URL (custom domain and Vercel default domain if both are used). Missing entries cause OAuth errors for that host.
-5. **Database**: Run `npm run db:migrate` once against your production `DATABASE_URL` (from your machine: `DATABASE_URL=postgresql://... npm run db:migrate`) so raffles and payment-signatures tables exist.
+5. **Database**: Run `npm run db:migrate` once against your production `DATABASE_URL` (from your machine: `DATABASE_URL=postgresql://... npm run db:migrate`) so `users` and `wallets` exist.
 6. **Deploy**: push to your main branch or trigger a deploy from the Vercel dashboard.
 
 **`npm run vercel-build`** copies the site into **`public/`**, then replaces `{{SITE_URL}}` in **`public/index.html` only** so the repo root keeps placeholders for Open Graph/Twitter URLs.

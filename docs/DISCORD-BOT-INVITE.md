@@ -1,66 +1,27 @@
-# Discord bot invite (raffle announcements)
+# Discord bot invite (optional)
 
-The app posts to a Discord channel when:
-- **A new raffle is created** — rich embed with prize image, name, ticket count, cost per ticket, and link
-- **A raffle ends** — announcement with winner (wallet or Discord username if linked)
+The site uses **`DISCORD_BOT_TOKEN`** so the server can call Discord’s API to resolve Discord user IDs to **usernames and avatars** (for example the **Team** section via `GET /api/discord/public-users`).
 
-The bot needs: **View Channels**, **Send Messages**, **Embed Links**, and (for future slash commands) **Use Application Commands**.
+This is separate from **OAuth** (`DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET`), which powers “Log in with Discord” for visitors.
 
----
+## Invite URL
 
-## Create the invite link from the Developer Portal
+Use your app’s **Application ID** from [Discord Developer Portal](https://discord.com/developers/applications) → your application → **OAuth2** → **General** → **CLIENT ID**.
 
-1. Open **[Discord Developer Portal](https://discord.com/developers/applications)** and sign in.
-2. Select your application (or create one: **New Application**).
-3. Go to **OAuth2** → **URL Generator** in the left sidebar.
-4. Under **SCOPES**, check:
-   - **bot** — so the link adds the bot to the server
-   - **applications.commands** — for future slash commands (e.g. track raffle progress)
-5. Under **BOT PERMISSIONS**, check:
-   - **View Channels**
-   - **Send Messages**
-   - **Embed Links**
-6. At the bottom, copy the **Generated URL**. It will look like:
-   ```
-   https://discord.com/api/oauth2/authorize?client_id=YOUR_APPLICATION_ID&permissions=2416167936&scope=bot%20applications.commands
-   ```
-   (Permission value `2416167936` = View Channels, Send Messages, Embed Links, Read Message History, Use Slash Commands, and related permissions.)
+Open **`/discord-bot-invite.html?client_id=YOUR_CLIENT_ID`** on your site, or build the invite link manually with the scopes and permissions you need.
 
-**Alternative (manual URL):**  
-Replace `YOUR_APPLICATION_ID` with your **Application ID** (General → Application ID):
+A typical **bot + slash commands** scope string is: `bot%20applications.commands`.
 
-```
-https://discord.com/api/oauth2/authorize?client_id=YOUR_APPLICATION_ID&permissions=2416167936&scope=bot%20applications.commands
-```
+## Permissions
 
----
+Grant only what you need. For fetching public user profiles by ID, the bot does not need to join every user’s server; it only needs the **Bot** token on the **same application** you use for OAuth, with Discord’s normal API access to user objects the bot is allowed to see.
 
-## Share the invite with your server admin
+For a bot that will also post in a **server channel** later, add permissions such as **View Channel**, **Send Messages**, and **Embed Links** for that channel, and install the bot into that server via the invite URL.
 
-Send your **server founder/admin** one of the following:
+## Environment
 
-- **Option A — Professional invite page (recommended)**  
-  Deploy the project (or run locally) and open:
-  ```
-  https://YOUR-SITE.com/discord-bot-invite.html?client_id=YOUR_APPLICATION_ID
-  ```
-  Replace `YOUR_APPLICATION_ID` with your app’s Application ID from the Developer Portal (General → Application ID). That page shows a short description and an **“Invite to server”** button. Share this link with your server admin in Discord or email; when they open it, they get a single clear “Invite to server” action.
+| Variable | Purpose |
+|----------|---------|
+| `DISCORD_BOT_TOKEN` | Bot token from the Developer Portal → **Bot** → token. Used for Team avatars / `public-users` and similar server-side Discord API calls. |
 
-- **Option B — Direct invite link**  
-  Send the Generated URL from the Developer Portal. The admin opens it, selects the server, and authorizes the bot.
-
-The admin must have **Manage Server** or **Administrator** on the server to add the bot.
-
----
-
-## After the bot is in the server
-
-1. **Get the channel ID** for the raffles channel:  
-   Discord → **User Settings** → **App Settings** → **Advanced** → enable **Developer Mode**.  
-   Right‑click the channel → **Copy channel ID**.
-
-2. **Set env vars** (and restart / redeploy):
-   - **`DISCORD_BOT_TOKEN`** — Same app → **Bot** → **Reset Token** → copy.
-   - **`DISCORD_RAFFLE_CHANNEL_ID`** — The channel ID from above.
-
-New raffles and winner announcements will then post to that channel.
+There is **no** raffle-specific channel variable on this project.

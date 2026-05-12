@@ -6,8 +6,6 @@
   "rewrites": [
     { "source": "/favicon.ico", "destination": "/api/favicon" },
     { "source": "/favicon.svg", "destination": "/api/favicon.svg" },
-    { "source": "/api/raffles", "destination": "/api/raffles-proxy" },
-    { "source": "/api/raffles/(.*)", "destination": "/api/raffles-proxy?path=$1" },
     { "source": "/api/wait-list", "destination": "/api/wait-list-proxy" },
     { "source": "/api/wait-list/(.*)", "destination": "/api/wait-list-proxy?path=$1" }
   ],

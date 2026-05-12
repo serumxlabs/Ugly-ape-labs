@@ -1,5 +1,5 @@
 /**
- * Vercel: /api/wait-list/* via rewrite (same pattern as raffles-proxy).
+ * Vercel: /api/wait-list/* via rewrite to Express.
  */
 const app = require('../server');
 
