@@ -48,27 +48,45 @@
       : hero.musicSrc
         ? [{ src: hero.musicSrc, label: hero.musicLabel || 'Music' }]
         : [];
-    var heroAudioEl = document.getElementById('hero-audio');
-    var heroTrackSelect = document.getElementById('hero-audio-track');
-    if (heroTrackSelect) {
-      while (heroTrackSelect.firstChild) heroTrackSelect.removeChild(heroTrackSelect.firstChild);
+    var heroTracksWrap = document.getElementById('hero-audio-tracks');
+    if (heroTracksWrap) {
+      while (heroTracksWrap.firstChild) heroTracksWrap.removeChild(heroTracksWrap.firstChild);
       if (!heroTracks.length) {
-        heroTrackSelect.hidden = true;
+        heroTracksWrap.hidden = true;
       } else {
-        heroTrackSelect.hidden = false;
-        heroTracks.forEach(function (t, i) {
-          var opt = document.createElement('option');
-          opt.value = String(i);
-          opt.textContent = t.label || 'Track ' + (i + 1);
-          opt.setAttribute('data-src', resolveHeroAssetUrl(t.src));
-          heroTrackSelect.appendChild(opt);
+        heroTracksWrap.hidden = false;
+        heroTracks.forEach(function (t) {
+          var url = resolveHeroAssetUrl(t.src);
+          var label = t.label || 'Music';
+          if (!url) return;
+          var row = document.createElement('div');
+          row.className = 'hero-home__audio-row';
+
+          var au = document.createElement('audio');
+          au.setAttribute('preload', 'metadata');
+          au.setAttribute('loop', '');
+          au.setAttribute('playsinline', '');
+          au.src = url;
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'hero-home__audio-btn';
+          btn.setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-label', 'Play ' + label);
+          btn.innerHTML =
+            '<svg class="hero-home__audio-icon hero-home__audio-icon--play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>' +
+            '<svg class="hero-home__audio-icon hero-home__audio-icon--pause" viewBox="0 0 24 24" hidden aria-hidden="true"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+          var lab = document.createElement('span');
+          lab.className = 'hero-home__audio-label';
+          lab.textContent = label;
+
+          row.appendChild(au);
+          row.appendChild(btn);
+          row.appendChild(lab);
+          heroTracksWrap.appendChild(row);
         });
-        heroTrackSelect.selectedIndex = 0;
       }
-    }
-    if (heroAudioEl && heroTracks.length) {
-      var u0 = resolveHeroAssetUrl(heroTracks[0].src);
-      if (u0) heroAudioEl.src = u0;
     }
     var dashLogos = document.querySelectorAll('.dashboard__logo-img, .footer__logo');
     dashLogos.forEach(function (img) { if (img && logoUrl) img.src = logoUrl; });
@@ -353,52 +371,75 @@
 
   setActiveSection(getSectionIdFromHash());
 
-  // ----- Hero ambient audio (play / pause + track list) -----
+  // ----- Hero ambient audio: one play/pause row per track -----
   (function () {
-    var audio = document.getElementById('hero-audio');
-    var btn = document.getElementById('hero-audio-btn');
-    var trackSelect = document.getElementById('hero-audio-track');
-    var iconPlay = btn && btn.querySelector('.hero-home__audio-icon--play');
-    var iconPause = btn && btn.querySelector('.hero-home__audio-icon--pause');
-    if (!audio || !btn) return;
-    function syncUi() {
-      var playing = !audio.paused;
-      if (iconPlay) iconPlay.hidden = playing;
-      if (iconPause) iconPause.hidden = !playing;
-      btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-      btn.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
+    var wrap = document.getElementById('hero-audio-tracks');
+    if (!wrap) return;
+
+    function syncAllRows() {
+      wrap.querySelectorAll('.hero-home__audio-row').forEach(function (row) {
+        var au = row.querySelector('audio');
+        var btn = row.querySelector('.hero-home__audio-btn');
+        if (!au || !btn) return;
+        var playing = !au.paused;
+        var iconPlay = btn.querySelector('.hero-home__audio-icon--play');
+        var iconPause = btn.querySelector('.hero-home__audio-icon--pause');
+        if (iconPlay) iconPlay.hidden = playing;
+        if (iconPause) iconPause.hidden = !playing;
+        btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+        var labelEl = row.querySelector('.hero-home__audio-label');
+        var nm = labelEl ? labelEl.textContent.trim() : 'music';
+        btn.setAttribute('aria-label', (playing ? 'Pause ' : 'Play ') + nm);
+      });
     }
-    function applySelectedTrackSrc() {
-      if (!trackSelect || trackSelect.hidden || trackSelect.selectedIndex < 0) return;
-      var opt = trackSelect.options[trackSelect.selectedIndex];
-      var src = opt && opt.getAttribute('data-src');
-      if (!src) return;
-      var wasPlaying = !audio.paused;
-      audio.pause();
-      audio.src = src;
-      audio.load();
-      if (wasPlaying) {
-        var p = audio.play();
-        if (p && typeof p.catch === 'function') p.catch(function () {});
-      } else {
-        syncUi();
-      }
-    }
-    btn.addEventListener('click', function () {
+
+    wrap.addEventListener('click', function (e) {
+      var btn = e.target.closest('.hero-home__audio-btn');
+      if (!btn || !wrap.contains(btn)) return;
+      var row = btn.closest('.hero-home__audio-row');
+      var audio = row && row.querySelector('audio');
+      if (!audio) return;
       if (audio.paused) {
+        wrap.querySelectorAll('audio').forEach(function (a) {
+          if (a !== audio && !a.paused) a.pause();
+        });
         var p = audio.play();
         if (p && typeof p.catch === 'function') p.catch(function () {});
       } else {
         audio.pause();
       }
+      syncAllRows();
     });
-    if (trackSelect) {
-      trackSelect.addEventListener('change', applySelectedTrackSrc);
-    }
-    audio.addEventListener('play', syncUi);
-    audio.addEventListener('pause', syncUi);
-    audio.addEventListener('ended', syncUi);
-    syncUi();
+
+    wrap.addEventListener(
+      'play',
+      function (e) {
+        if (e.target.tagName !== 'AUDIO' || !wrap.contains(e.target)) return;
+        wrap.querySelectorAll('audio').forEach(function (a) {
+          if (a !== e.target && !a.paused) a.pause();
+        });
+        syncAllRows();
+      },
+      true
+    );
+
+    wrap.addEventListener(
+      'pause',
+      function (e) {
+        if (e.target.tagName === 'AUDIO' && wrap.contains(e.target)) syncAllRows();
+      },
+      true
+    );
+
+    wrap.addEventListener(
+      'ended',
+      function (e) {
+        if (e.target.tagName === 'AUDIO' && wrap.contains(e.target)) syncAllRows();
+      },
+      true
+    );
+
+    syncAllRows();
   })();
 
   // ----- Wallet (Solana) -----

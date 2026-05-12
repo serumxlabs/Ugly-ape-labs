@@ -217,10 +217,16 @@ body {
 }
 .hero-home__audio {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+.hero-home__audio-row {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.65rem;
-  margin-top: 0.65rem;
 }
 .hero-home__audio-btn {
   flex-shrink: 0;
@@ -252,34 +258,17 @@ body {
 .hero-home__audio-icon--pause {
   margin-left: 1px;
 }
-.hero-home__audio-tracklist {
-  flex: 1 1 11rem;
-  min-width: min(100%, 11rem);
-  max-width: 100%;
+.hero-home__audio-label {
   margin: 0;
-  padding: 0.2rem 0.35rem;
   font-family: var(--font-menu);
-  font-size: clamp(0.68rem, 1.8vw, 0.8rem);
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  line-height: 1.35;
-  color: rgba(255, 255, 255, 0.88);
-  background: rgba(13, 14, 18, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
-  box-sizing: border-box;
-}
-.hero-home__audio-tracklist:focus {
-  outline: 2px solid rgba(57, 255, 20, 0.45);
-  outline-offset: 2px;
-}
-.hero-home__audio-tracklist option {
-  padding: 0.35rem 0.5rem;
-  background: #0d0e12;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
+  max-width: min(18rem, 100%);
+  line-height: 1.25;
 }
 .hero-home__top .hero-home__title {
   margin: 0;
