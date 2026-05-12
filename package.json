@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "vercel-build": "node scripts/copy-static.js && node scripts/inject-og.js",
+    "vercel-build": "node scripts/vercel-build-shim.js",
     "db:migrate": "node scripts/db-migrate.js",
     "cache-collections": "node scripts/cache-collection-images.js"
   },
