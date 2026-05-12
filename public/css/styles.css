@@ -370,7 +370,7 @@ body {
 
 .hero-home__intro {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   bottom: max(1.25rem, env(safe-area-inset-bottom));
   left: max(1rem, env(safe-area-inset-left));
   right: max(1rem, env(safe-area-inset-right));

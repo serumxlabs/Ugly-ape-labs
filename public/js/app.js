@@ -306,10 +306,16 @@
     var panel = document.getElementById('hero-home-readmore-panel');
     if (!toggle || !panel) return;
     toggle.addEventListener('click', function () {
-      var open = panel.hidden;
-      panel.hidden = !open;
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.textContent = open ? 'Read less' : 'Read more';
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Read more';
+      } else {
+        panel.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.textContent = 'Read less';
+      }
     });
   })();
 
