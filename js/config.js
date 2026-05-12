@@ -37,8 +37,13 @@ window.UGLY_APE_SQUAD_CONFIG = {
     tagline: '',
     solanaLogoUrl: '/assets/solana-logo.svg',
     backgroundImage: 'assets/hero-bg.png',
-    musicSrc: 'assets/audio/mutation-on-deck-remastered.mp3',
-    musicLabel: 'Mutation on Deck',
+    /** Hero ambient tracks (shown as a list; first is default). */
+    musicTracks: [
+      { src: 'assets/audio/mutation-on-deck-remastered.mp3', label: 'Mutation on Deck' },
+      { src: 'assets/audio/airdrop-contamination.mp3', label: 'Airdrop Contamination' },
+      { src: 'assets/audio/discipline-protocol-updated.mp3', label: 'Discipline Protocol (Updated)' },
+      { src: 'assets/audio/hold-the-vial.mp3', label: 'Hold The Vial' },
+    ],
   },
 
   intro: {
