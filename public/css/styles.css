@@ -3604,6 +3604,37 @@ body.holdings-verified #btn-verify-panel {
 .tokenomics__btn-icon--dexscreener {
   filter: brightness(1.15);
 }
+@media (max-width: 899px) {
+  .tokenomics__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tokenomics__actions .tokenomics__btn {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.45rem 0.75rem;
+    font-size: clamp(0.65rem, 3.2vw, 0.82rem);
+    line-height: 1.2;
+    white-space: nowrap;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2.75rem;
+  }
+  .tokenomics__actions .tokenomics__btn-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-right: 0;
+    flex-shrink: 0;
+  }
+}
 .tokenomics__summary {
   margin-bottom: 1rem;
   padding: 0.75rem;
