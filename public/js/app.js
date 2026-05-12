@@ -301,6 +301,18 @@
   if (mainHome) mainHome.hidden = false;
   document.body.classList.add('route-home');
 
+  (function initHeroReadMore() {
+    var toggle = document.getElementById('hero-home-readmore-toggle');
+    var panel = document.getElementById('hero-home-readmore-panel');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', function () {
+      var open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.textContent = open ? 'Read less' : 'Read more';
+    });
+  })();
+
   // ----- Section highlighting -----
   const navLinks = document.querySelectorAll('[data-section]');
   const sections = document.querySelectorAll('.section');
