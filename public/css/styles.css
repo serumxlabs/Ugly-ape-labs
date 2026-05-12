@@ -278,6 +278,33 @@ body {
   max-width: min(18rem, 100%);
   line-height: 1.25;
 }
+@media (max-width: 899px) {
+  .hero-home__audio-row {
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-home__audio-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  .hero-home__audio-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .hero-home__audio-label {
+    font-size: clamp(0.58rem, 2.85vw, 0.72rem);
+    letter-spacing: 0.03em;
+    max-width: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 .hero-home__top .hero-home__title {
   margin: 0;
 }
