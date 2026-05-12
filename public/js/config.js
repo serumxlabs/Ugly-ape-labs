@@ -57,17 +57,17 @@ window.UGLY_APE_SQUAD_CONFIG = {
   utilities: [
     {
       name: 'GOTM Labz',
-      description: 'Stake your Ugly Apes and Mutants with GOTM Labz on Solana.',
+      description: 'Trait store and NFT staking for Ugly Ape Squad on Solana.',
       links: [
-        { label: 'NFT staking', url: 'https://www.gotmlabz.io/solutions/nft-staking' },
-        { label: 'GOTM Labz', url: 'https://www.gotmlabz.io/' },
+        { label: 'Trait store', url: 'https://www.gotmlabz.io/traitstore/ugly-ape-squad' },
+        { label: 'NFT staking', url: 'https://www.gotmlabz.io/nftstake/uglylabs' },
       ],
     },
     {
       variant: 'lunarverse',
       name: 'Lunarverse',
-      description: 'Quests, rewards, and community utilities on the Lunarverse platform.',
-      url: 'https://lunarverse.app/',
+      description: 'Quests, rewards, and community utilities for Ugly Ape Squad.',
+      url: 'https://uglyapesquad.lunarverse.app/',
       ctaLabel: 'Open Lunarverse',
     },
   ],
