@@ -219,7 +219,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 1.35rem;
   margin-top: 0.65rem;
 }
 .hero-home__audio-row {
@@ -2980,7 +2980,7 @@ body.holdings-verified #btn-verify-panel {
   position: relative;
   background-color: #050a08;
   background-image:
-    linear-gradient(180deg, rgba(5, 12, 9, 0.82) 0%, rgba(4, 10, 7, 0.88) 40%, rgba(3, 8, 6, 0.93) 100%),
+    linear-gradient(180deg, rgba(5, 12, 9, 0.45) 0%, rgba(4, 10, 7, 0.55) 40%, rgba(3, 8, 6, 0.68) 100%),
     url('../assets/team-section-bg.png');
   background-size: cover;
   background-position: center 35%;
