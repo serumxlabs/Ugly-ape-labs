@@ -378,15 +378,6 @@ body {
   box-sizing: border-box;
   pointer-events: auto;
 }
-@media (max-width: 899px) {
-  /* Pin intro below title + track rows (absolute siblings); was only bottom-anchored so text grew up under the tunes. */
-  body.route-home .hero-home__intro {
-    bottom: calc(var(--bottom-height) + var(--safe-bottom) + 0.75rem);
-    top: max(calc(env(safe-area-inset-top, 0px) + 19rem), 36svh);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
 .hero-home__intro-lead {
   margin: 0 0 0.75rem;
   font-family: var(--font-sans);
@@ -587,8 +578,9 @@ body {
     max-width: none;
     width: 100%;
     margin: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: calc(var(--bottom-height) + var(--safe-bottom) + 1rem);
   }
   .hero-home__slotto {
     bottom: 1.5rem;
@@ -618,6 +610,34 @@ body {
   flex-direction: row !important;
   justify-content: flex-start !important;
   align-items: flex-start !important;
+}
+@media (max-width: 899px) {
+  /* Stack title/tracks then intro in document order — avoids absolute overlap on narrow viewports */
+  #home.hero-home.section {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #home .hero-home__top {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    max-width: none;
+    z-index: 3;
+  }
+  #home .hero-home__intro {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    max-width: none;
+    margin-top: 1.25rem;
+    z-index: 3;
+    overflow: visible;
+  }
 }
 #home .hero-home__title:not(.hero-home__title--brand) {
   display: flex !important;
