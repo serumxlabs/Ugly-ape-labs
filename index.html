@@ -462,7 +462,7 @@
     (function(){ if (typeof window.Buffer !== 'undefined') return; function BufferPolyfill(arg, enc, len){ if (typeof arg === 'number') return new Uint8Array(arg); if (Array.isArray(arg)) return new Uint8Array(arg); if (arg && typeof arg === 'object' && arg.byteLength !== undefined) { var start = enc && typeof enc === 'number' ? enc : 0; var end = typeof len === 'number' ? len : arg.byteLength; return new Uint8Array(arg, start, end - start); } return new Uint8Array(0); } BufferPolyfill.from = function(a, enc, off){ if (typeof a === 'object' && a !== null && a.byteLength !== undefined) return new Uint8Array(a, off || 0, enc || a.byteLength); return new Uint8Array(a); }; BufferPolyfill.alloc = function(n){ var b = new Uint8Array(n); b.writeBigUInt64LE = function(v, o){ new DataView(b.buffer, b.byteOffset, b.byteLength).setBigUint64(o, v, true); }; return b; }; BufferPolyfill.isBuffer = function(x){ return x instanceof Uint8Array; }; window.Buffer = BufferPolyfill; })();
   </script>
   <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-  <script src="/js/config.js"></script>
-  <script src="/js/app.js?v=24"></script>
+  <script src="/js/config.js?v=2"></script>
+  <script src="/js/app.js?v=25"></script>
 </body>
 </html>

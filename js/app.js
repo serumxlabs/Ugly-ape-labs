@@ -118,21 +118,60 @@
     if (utilitiesLead && c.utilitiesLead) utilitiesLead.textContent = c.utilitiesLead;
     var utilitiesGrid = document.getElementById('utilities-grid');
     if (utilitiesGrid && c.utilities && c.utilities.length) {
-      utilitiesGrid.innerHTML = c.utilities.map(function (u) {
-        if (u.links && u.links.length) {
-          var buttonsHtml = u.links.map(function (l) {
-            return '<a href="' + escapeHtml(l.url || '#') + '" class="btn btn--outline" target="_blank" rel="noopener">' + escapeHtml(l.label || '') + '</a>';
-          }).join('');
-          return '<div class="card card--gotm">' +
-            '<div class="card__bg"></div>' +
-            '<div class="card__gotm-content">' +
-              '<h3 class="card__title">' + escapeHtml(u.name || '') + '</h3>' +
-              '<p class="card__text">' + escapeHtml(u.description || '') + '</p>' +
-              '<div class="card__gotm-buttons">' + buttonsHtml + '</div>' +
-            '</div></div>';
-        }
-        return '';
-      }).join('');
+      utilitiesGrid.innerHTML = c.utilities
+        .map(function (u) {
+          var variant = ((u.variant || '') + '').toLowerCase();
+          if (variant === 'lunarverse') {
+            var lvHref = escapeHtml(u.url || u.href || '');
+            if (!lvHref) return '';
+            var ctaLabel = escapeHtml(u.ctaLabel || 'Open');
+            return (
+              '<a href="' +
+              lvHref +
+              '" class="card card--lunarverse" target="_blank" rel="noopener">' +
+              '<div class="card__bg"></div>' +
+              '<div class="card__lunarverse-content">' +
+              '<h3 class="card__title">' +
+              escapeHtml(u.name || '') +
+              '</h3>' +
+              '<p class="card__text">' +
+              escapeHtml(u.description || '') +
+              '</p>' +
+              '<span class="btn btn--outline">' +
+              ctaLabel +
+              '</span>' +
+              '</div></a>'
+            );
+          }
+          if (u.links && u.links.length) {
+            var buttonsHtml = u.links.map(function (l) {
+              return (
+                '<a href="' +
+                escapeHtml(l.url || '#') +
+                '" class="btn btn--outline" target="_blank" rel="noopener">' +
+                escapeHtml(l.label || '') +
+                '</a>'
+              );
+            }).join('');
+            return (
+              '<div class="card card--gotm">' +
+              '<div class="card__bg"></div>' +
+              '<div class="card__gotm-content">' +
+              '<h3 class="card__title">' +
+              escapeHtml(u.name || '') +
+              '</h3>' +
+              '<p class="card__text">' +
+              escapeHtml(u.description || '') +
+              '</p>' +
+              '<div class="card__gotm-buttons">' +
+              buttonsHtml +
+              '</div>' +
+              '</div></div>'
+            );
+          }
+          return '';
+        })
+        .join('');
     }
     var utilitiesComingLabel = document.getElementById('utilities-coming-label');
     var utilitiesComingGrid = document.getElementById('utilities-coming-grid');

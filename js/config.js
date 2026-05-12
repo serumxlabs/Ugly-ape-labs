@@ -49,7 +49,28 @@ window.UGLY_APE_SQUAD_CONFIG = {
   footerCopy: 'Ugly Ape Squad',
 
   utilitiesLead: 'Staking, partner utilities and external tools.',
-  utilities: [],
+  /**
+   * Live utility tiles (bg images from css: .card--gotm, .card--lunarverse).
+   * - variant omitted + links[] → GOTM-style card (image from CSS).
+   * - variant: 'lunarverse' + url → full-width banner card; optional ctaLabel for button text.
+   */
+  utilities: [
+    {
+      name: 'GOTM Labz',
+      description: 'Stake your Ugly Apes and Mutants with GOTM Labz on Solana.',
+      links: [
+        { label: 'NFT staking', url: 'https://www.gotmlabz.io/solutions/nft-staking' },
+        { label: 'GOTM Labz', url: 'https://www.gotmlabz.io/' },
+      ],
+    },
+    {
+      variant: 'lunarverse',
+      name: 'Lunarverse',
+      description: 'Quests, rewards, and community utilities on the Lunarverse platform.',
+      url: 'https://lunarverse.app/',
+      ctaLabel: 'Open Lunarverse',
+    },
+  ],
 
   utilitiesComingSoon: [],
 
