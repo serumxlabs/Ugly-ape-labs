@@ -15,7 +15,7 @@ window.UGLY_APE_SQUAD_CONFIG = {
   // ——— Social ———
   social: {
     x: 'https://x.com/uglyapesquad',
-    discord: '#',
+    discord: 'https://discord.gg/Y4H2cHWHhy',
   },
   shopUrl: '',
 
