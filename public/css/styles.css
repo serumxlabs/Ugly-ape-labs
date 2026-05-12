@@ -222,6 +222,14 @@ body {
   gap: 1.35rem;
   margin-top: 0.65rem;
 }
+/* Rows live inside #hero-audio-tracks; gap on .hero-home__audio alone does not space them. */
+.hero-home__audio-tracks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+}
 .hero-home__audio-row {
   display: flex;
   flex-wrap: wrap;
