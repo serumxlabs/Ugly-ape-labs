@@ -379,8 +379,12 @@ body {
   pointer-events: auto;
 }
 @media (max-width: 899px) {
+  /* Pin intro below title + track rows (absolute siblings); was only bottom-anchored so text grew up under the tunes. */
   body.route-home .hero-home__intro {
     bottom: calc(var(--bottom-height) + var(--safe-bottom) + 0.75rem);
+    top: max(calc(env(safe-area-inset-top, 0px) + 19rem), 36svh);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 .hero-home__intro-lead {
