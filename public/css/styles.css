@@ -3255,12 +3255,25 @@ body.holdings-verified #btn-verify-panel {
   }
 }
 
-/* Team cards: circular image, details centered below */
+/* Team cards: circular image, details centered below — equal height in grid */
+#team-grid {
+  align-items: stretch;
+}
+#team-grid > .card--team {
+  height: 100%;
+  min-height: 17.5rem;
+  box-sizing: border-box;
+}
 .card--team {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+.card--team .card__text--role {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  color: var(--text-muted);
 }
 .card--team .card__avatar-wrap {
   width: 100%;
@@ -3288,10 +3301,6 @@ body.holdings-verified #btn-verify-panel {
 .card--team .card__title {
   width: 100%;
   margin-bottom: 0.25rem;
-}
-.card--team .card__text--role {
-  margin-top: 0;
-  color: var(--text-muted);
 }
 .card__meta--handle .link {
   font-size: 1.0625rem;
